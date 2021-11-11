@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  pg:
+    image: postgres:14
+    container_name: pg
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - '5432:5432'
+
+  pgAdmin:
+    image: dpage/pgadmin4
+    container_name: pg-admin
+    environment:
+      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_DEFAULT_EMAIL: marefati110@gmail.com
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - 8081:80
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+
+volumes:
+  postgres:
+  pgadmin:
