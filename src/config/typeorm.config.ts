@@ -1,9 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-export function typeOrmCOnfig(
-  configService: ConfigService,
-): TypeOrmModuleOptions {
+export function typeOrmCOnfig(configService: ConfigService): TypeOrmModuleOptions {
   return {
     type: 'postgres',
     host: configService.get<string>('DATABASE_HOST') || '127.0.0.1',
@@ -13,7 +11,8 @@ export function typeOrmCOnfig(
     database: configService.get<string>('DATABASE_NAME') || 'jirjirak',
     autoLoadEntities: true,
     entities: ['dist/**/*.entity{.ts,.js}'],
+    retryAttempts: 1,
     synchronize: true,
-    logging: true,
+    logging: false,
   };
 }

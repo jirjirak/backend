@@ -1,4 +1,8 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
+import { BootstrapService } from './service/bootstrap.service';
 
-@Module({})
+@Global()
+@Module({
+  providers: [BootstrapService],
+})
 export class CommonModule {}
