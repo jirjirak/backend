@@ -1,11 +1,21 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
+import { Session } from '../../auth/entities/session.entity';
 import { Team } from './team.entity';
 
 @Entity()
 export class User extends BasicEntity {
+  @OneToMany(() => Session, (session) => session.user)
+  sessions: Session[];
+
+  @OneToMany(() => Team, (team) => team.owner)
+  teams: Team[];
+
+  @OneToMany(() => Team, (team) => team.users)
+  joinedTeams: Team[];
+
   @Column()
   firstName: string;
 
@@ -34,9 +44,6 @@ export class User extends BasicEntity {
   @Column({ default: false })
   isSystemOwner: boolean;
 
-  @OneToMany(() => Team, (team) => team.owner)
-  teams: Team[];
-
-  @OneToMany(() => Team, (team) => team.users)
-  joinedTeams: Team[];
+  @Column({ default: false })
+  blocked: boolean;
 }

@@ -20,6 +20,7 @@ export class BootstrapService {
       .setTitle('JirJirak')
       .setDescription('JirJirak Api Document')
       .setVersion('1')
+      .addBearerAuth()
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
