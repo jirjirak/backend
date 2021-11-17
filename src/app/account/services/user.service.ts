@@ -66,4 +66,16 @@ export class UserService {
 
     return user;
   }
+
+  async checkUserCredential(email: string, password: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { email, password: this.createPassword(password) },
+    });
+
+    if (!user) {
+      throw new BadRequestException('invalid credential');
+    }
+
+    return user;
+  }
 }

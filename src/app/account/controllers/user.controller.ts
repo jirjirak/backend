@@ -8,6 +8,7 @@ import { StandardApi } from '../../../common/decorators/standard-api.decorator';
 import { AsyncStdRes } from '../../../common/types/standard-res.type';
 import { Role } from '../../auth/enum/role.enum';
 import { AuthService } from '../../auth/services/auth.service';
+import { LoginBodyDto, LoginResDto } from '../dto/user/login.register';
 import { RegisterBodyDto, RegisterResDto } from '../dto/user/register.dto';
 import { User } from '../entities/user.entity';
 import { TeamService } from '../services/team.service';
@@ -51,6 +52,12 @@ export class UserController {
     return { ...user, jwt };
   }
 
-  @Get()
-  async login() {}
+  @StandardApi({ type: LoginResDto })
+  @Post('login')
+  async login(@Body() body: LoginBodyDto): AsyncStdRes<LoginResDto> {
+    const { email, password } = body;
+    const user = await this.userService.checkUserCredential(email, password);
+    const jwt = await this.authService.buildJWTToken(user);
+    return { ...user, jwt };
+  }
 }
