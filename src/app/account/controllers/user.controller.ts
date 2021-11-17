@@ -34,7 +34,13 @@ export class UserController {
   @StandardApi({ type: RegisterResDto })
   @Post('register')
   async register(@Body() body: RegisterBodyDto): AsyncStdRes<RegisterResDto> {
-    const user = await this.userService.createUser(body);
+    let user: User;
+
+    user = await this.userService.createSystemOwner(body);
+
+    if (!user) {
+      user = await this.userService.createUser(body);
+    }
 
     const defaultTeam = await this.teamService.createDefaultTeam(user);
 
@@ -44,4 +50,7 @@ export class UserController {
 
     return { ...user, jwt };
   }
+
+  @Get()
+  async login() {}
 }

@@ -31,6 +31,12 @@ export class User extends BasicEntity {
   @Column()
   email: string;
 
+  @Column({ default: false })
+  emailVerified: boolean;
+
+  @Column({ default: false })
+  phoneNumberVerified: boolean;
+
   @Column()
   username: string;
 
