@@ -11,6 +11,11 @@ import { DirectoryRepository } from '../repositories/directory.repository';
 export class DirectoryService {
   constructor(private directoryRepository: DirectoryRepository) {}
 
+  async IsDirectoryNameUniq(team: Team, name: string): Promise<boolean> {
+    const count = await this.directoryRepository.count({ team, name });
+    return !count;
+  }
+
   async create(team: Team, name: string, parent: Directory): Promise<Directory> {
     const directory = await this.directoryRepository.createAndSave({
       team,
