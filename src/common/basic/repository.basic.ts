@@ -188,7 +188,7 @@ export class BasicRepository<Entity> extends Repository<Entity> {
     return result;
   }
 
-  async count(optionsOrConditions?: FindManyOptions<Entity> | FindConditions<Entity>): Promise<number> {
+  async count(optionsOrConditions?: FindManyType<Entity> | FindType<Entity>): Promise<number> {
     this.logPerformanceStart();
     const result = await super.count(optionsOrConditions);
     this.logPerformanceEnd();
