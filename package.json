@@ -47,6 +47,7 @@
     "rxjs": "^7.4.0",
     "swagger-ui-express": "^4.1.6",
     "typeorm": "^0.2.40",
+    "ua-parser-js": "^1.0.2",
     "useragent": "^2.3.0",
     "uuid": "^8.3.2"
   },

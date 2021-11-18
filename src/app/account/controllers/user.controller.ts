@@ -1,5 +1,6 @@
-import { BadRequestException, Body, Get, Post, Req } from '@nestjs/common';
+import { BadRequestException, Body, Get, Ip, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
+import * as UserAgentParser from 'ua-parser-js';
 
 import { BasicController } from '../../../common/basic/Basic.controller';
 import { IsStringField } from '../../../common/decorators/common.decorator';
@@ -16,11 +17,6 @@ import { WhoAmIResDto } from '../dto/user/who-am-i.dto';
 import { User } from '../entities/user.entity';
 import { TeamService } from '../services/team.service';
 import { UserService } from '../services/user.service';
-
-class reza {
-  @IsStringField()
-  ali: string;
-}
 
 @BasicController('user')
 export class UserController {
@@ -75,8 +71,10 @@ export class UserController {
 
   @StandardApi({ type: RefreshResDto })
   @Post('refresh')
-  async refresh(@Req() req: Request, @Body() body: RefreshBodyDto): AsyncStdRes<RefreshResDto> {
+  async refresh(@Ip() ip: string, @Req() req: Request, @Body() body: RefreshBodyDto): AsyncStdRes<RefreshResDto> {
     const { refreshToken } = body;
+
+    const ua = UserAgentParser(req.headers['user-agent']);
 
     const user = await this.authService.isUserRefreshTokenValid(refreshToken);
 
