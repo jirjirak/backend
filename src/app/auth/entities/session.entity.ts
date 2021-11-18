@@ -1,6 +1,7 @@
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
+import { IsStringField } from '../../../common/decorators/common.decorator';
 import { User } from '../../account/entities/user.entity';
 
 @Entity()
@@ -11,6 +12,7 @@ export class Session extends BasicEntity {
   @Column()
   expiresAt: Date;
 
+  @IsStringField()
   @Index()
   @Column()
   refreshToken: string;

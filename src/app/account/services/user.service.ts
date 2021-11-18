@@ -17,7 +17,16 @@ export class UserService {
     return user;
   }
 
-  private createPassword(password: string): string {
+  async whoAmI(user: User): Promise<User> {
+    const userInfo = await this.userRepository.findOne({
+      where: { id: user.id },
+      select: ['id', 'firstName', 'lastName', 'username', 'displayName', 'isSystemAdmin', 'isSystemOwner'],
+    });
+
+    return userInfo;
+  }
+
+  createPassword(password: string): string {
     return crypto
       .createHash('sha256')
       .update(password + 'secretekey')

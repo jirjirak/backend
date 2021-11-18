@@ -1,4 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -10,9 +11,13 @@ import { AuthService } from './services/auth.service';
 
 @Module({
   imports: [
-    JwtModule.register({
-      privateKey: '1',
-      signOptions: { expiresIn: '10m' },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        privateKey: configService.get('SECRETE_KEY'),
+        signOptions: { expiresIn: configService.get('JWT_EXPIREIN') },
+      }),
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     forwardRef(() => AccountModule),
