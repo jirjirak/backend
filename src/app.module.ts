@@ -4,7 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AccountModule } from './app/account/account.module';
 import { AuthModule } from './app/auth/auth.module';
+import { EventModule } from './app/event/event.module';
 import { MonitorModule } from './app/monitor/monitor.module';
+import { SchedulerModule } from './app/scheduler/scheduler.module';
 import { TagModule } from './app/tag/tag.module';
 import { CommonModule } from './common/common.module';
 import { typeOrmCOnfig } from './config/typeorm.config';
@@ -24,6 +26,8 @@ import { typeOrmCOnfig } from './config/typeorm.config';
     AccountModule,
     TagModule,
     MonitorModule,
+    SchedulerModule,
+    EventModule,
   ],
   controllers: [],
   providers: [],
