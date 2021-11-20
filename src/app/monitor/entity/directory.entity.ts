@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, Unique } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
 import { IsStringField } from '../../../common/decorators/common.decorator';
@@ -8,10 +8,6 @@ import { Monitor } from './monitor.entity';
 
 @Entity()
 export class Directory extends BasicEntity {
-  @IsStringField()
-  @Column()
-  name: string;
-
   @ManyToOne(() => Directory)
   @JoinColumn()
   parent: Directory;
@@ -25,4 +21,11 @@ export class Directory extends BasicEntity {
   @ManyToOne(() => Team, { nullable: false })
   @JoinColumn()
   team: Team;
+
+  @IsStringField()
+  @Column()
+  name: string;
+
+  @Column({ default: false })
+  isRootDirectory: boolean;
 }

@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
 import { Team } from '../../account/entities/team.entity';
 import { User } from '../../account/entities/user.entity';
+import { PermissionType } from '../enum/permission.enum';
 import { Directory } from './directory.entity';
 import { Monitor } from './monitor.entity';
 
@@ -16,11 +17,15 @@ export class Permission extends BasicEntity {
   @JoinColumn()
   team: Team;
 
+  @Index()
+  @Column({ enum: PermissionType })
+  type: PermissionType;
+
   @ManyToOne(() => Directory)
   @JoinColumn()
   directory: Directory;
 
-  @ManyToOne(() => Directory)
+  @ManyToOne(() => Monitor)
   @JoinColumn()
   monitor: Monitor;
 
