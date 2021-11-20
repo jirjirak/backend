@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 // sync: false, // Asynchronous logging
 // }),
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import { CronJob } from 'cron';
 import compression from 'fastify-compress';
 import * as helmet from 'fastify-helmet';
 
@@ -51,6 +52,12 @@ async function bootstrap() {
   bootstrapService.setupSwagger(app);
 
   await app.listen(3000, '0.0.0.0');
+
+  const t = '*/1 * * * * *';
+
+  const cron = new CronJob(t, () => {
+    console.log('before');
+  });
 
   logger.log(`Application is running on: ${await app.getUrl()}`);
   logger.log(`Swagger is running on: ${await app.getUrl()}/v1/swagger`);
