@@ -10,6 +10,7 @@ import { SchedulerModule } from './app/scheduler/scheduler.module';
 import { TagModule } from './app/tag/tag.module';
 import { CommonModule } from './common/common.module';
 import { typeOrmCOnfig } from './config/typeorm.config';
+import { DatacenterModule } from './datacenter/datacenter.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { typeOrmCOnfig } from './config/typeorm.config';
     MonitorModule,
     SchedulerModule,
     EventModule,
+    DatacenterModule,
   ],
   controllers: [],
   providers: [],

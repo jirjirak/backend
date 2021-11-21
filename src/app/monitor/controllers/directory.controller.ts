@@ -30,6 +30,7 @@ export class DirectoryController {
     }
 
     const directory = await this.directoryService.create(team, name, parent);
+
     return directory;
   }
 

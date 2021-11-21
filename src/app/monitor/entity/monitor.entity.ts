@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'ty
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
 import { Team } from '../../account/entities/team.entity';
+import { User } from '../../account/entities/user.entity';
 import { DnsQueryType, MonitorStatus, MonitorType } from '../enum/monitor.enum';
 import { Directory } from './directory.entity';
 import { Permission } from './permission.entity';
@@ -12,16 +13,16 @@ export class Monitor extends BasicEntity {
   @JoinColumn()
   directory: Directory;
 
-  @ManyToOne(() => Team, { nullable: false })
+  @ManyToOne(() => User, { nullable: false })
   @JoinColumn()
-  team: Team;
+  creator: User;
 
-  @OneToMany(() => Permission, (permission) => permission.monitor)
-  permissions: Permission[];
+  // @ManyToOne(() => Team, { nullable: false })
+  // @JoinColumn()
+  // team: Team;
 
-  @ManyToOne(() => Monitor)
-  @JoinColumn()
-  monitor: Monitor;
+  @Column()
+  interval: number;
 
   @Column()
   friendlyName: string;
@@ -32,14 +33,18 @@ export class Monitor extends BasicEntity {
   @Column()
   address: string;
 
+  @OneToMany(() => Permission, (permission) => permission.monitor)
+  permissions: Permission[];
+
+  // @ManyToOne(() => Monitor)
+  // @JoinColumn()
+  // monitor: Monitor;
+
   @Column({ enum: MonitorStatus, default: MonitorStatus.Waiting })
   status: MonitorStatus;
 
   @Column({ nullable: true })
   description: string;
-
-  @Column()
-  timeInterval: number;
 
   @Column({ default: false })
   flipStatus: boolean;

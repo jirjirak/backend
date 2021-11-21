@@ -27,11 +27,26 @@ export class DirectoryService {
   }
 
   async list(): Promise<Directory[]> {
-    const directories = await this.directoryRepository.find({
-      where: { team: 1 },
-      relations: ['monitors'],
-      loadRelationIds: { relations: ['parent'] },
-    });
+    // const directories = await this.directoryRepository.find({
+    //   where: { team: 7 },
+    //   relations: ['monitors', 'monitors.permissions', 'permissions'],
+    //   loadRelationIds: { relations: ['parent'] },
+    // });
+
+    let directories = await this.directoryRepository
+      .createQueryBuilder('directory')
+      .where('directory.team = :team', { team: 7 })
+      .leftJoinAndSelect('directory.monitors', 'monitor')
+      .leftJoinAndSelect('monitor.permissions', 'monitorPermission', 'monitorPermission.user = :userId', {
+        userId: 7,
+      })
+      .leftJoinAndSelect('directory.permissions', 'directoryPermission', 'directoryPermission.user = :userId', {
+        userId: 7,
+      })
+      .loadRelationIdAndMap('directory.parent', 'directory.parent')
+      .getMany();
+
+    directories = directories.filter((item) => item?.permissions?.[0]?.read !== false);
 
     const treeDirectory: Directory[] = ListToTree(directories);
 

@@ -15,9 +15,11 @@ export class Event extends BasicEntity {
   @Column()
   end: Date;
 
-  @Column({ nullable: true })
-  statusCode: number;
-
   @Column()
   status: string;
+
+  // http fields
+
+  @Column({ nullable: true })
+  statusCode: number;
 }
