@@ -12,7 +12,7 @@ import { Directory } from '../../entity/directory.entity';
 import { Monitor } from '../../entity/monitor.entity';
 import { MonitorStatus, MonitorType } from '../../enum/monitor.enum';
 
-export class CreateMonitorBodyDto extends OmitType(Monitor, ['id']) {
+export class CreateMonitorBodyDto {
   @IsStringField()
   address: string;
 
@@ -25,13 +25,10 @@ export class CreateMonitorBodyDto extends OmitType(Monitor, ['id']) {
   @IsStringField()
   friendlyName: string;
 
-  @Max(60000)
-  @Min(1000)
+  @Max(60 * 60 * 1000) // one hour
+  @Min(1000) // 1 second
   @IsNumberField()
   interval: 10000;
-
-  @IsPrimaryKeyField()
-  creator: User;
 
   @IsEnumField({ type: MonitorStatus })
   status: MonitorStatus;

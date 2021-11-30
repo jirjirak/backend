@@ -6,6 +6,7 @@ import { AccountModule } from './app/account/account.module';
 import { AuthModule } from './app/auth/auth.module';
 import { DataCenterModule } from './app/data-center/data-center.module';
 import { EventModule } from './app/event/event.module';
+import { HeartbeatModule } from './app/heartbeat/heartbeat.module';
 import { MonitorModule } from './app/monitor/monitor.module';
 import { SchedulerModule } from './app/scheduler/scheduler.module';
 import { TagModule } from './app/tag/tag.module';
@@ -30,6 +31,7 @@ import { typeOrmCOnfig } from './config/typeorm.config';
     SchedulerModule,
     EventModule,
     DataCenterModule,
+    HeartbeatModule,
   ],
   controllers: [],
   providers: [],

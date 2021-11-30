@@ -1,7 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
-import { Team } from '../../account/entities/team.entity';
 import { User } from '../../account/entities/user.entity';
 import { DnsQueryType, MonitorStatus, MonitorType } from '../enum/monitor.enum';
 import { Directory } from './directory.entity';
@@ -24,6 +23,9 @@ export class Monitor extends BasicEntity {
   @Column()
   interval: number;
 
+  @Column({ nullable: true })
+  cronExpression: string;
+
   @Column()
   friendlyName: string;
 
@@ -35,10 +37,6 @@ export class Monitor extends BasicEntity {
 
   @OneToMany(() => Permission, (permission) => permission.monitor)
   permissions: Permission[];
-
-  // @ManyToOne(() => Monitor)
-  // @JoinColumn()
-  // monitor: Monitor;
 
   @Column({ enum: MonitorStatus, default: MonitorStatus.Waiting })
   status: MonitorStatus;

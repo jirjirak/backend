@@ -1,6 +1,8 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { SchedulerModule } from '../scheduler/scheduler.module';
+import { SchedulerService } from '../scheduler/services/scheduler.service';
 import { DirectoryController } from './controllers/directory.controller';
 import { MonitorController } from './controllers/monitor.controller';
 import { DirectoryRepository } from './repositories/directory.repository';
@@ -10,8 +12,12 @@ import { DirectoryService } from './services/directory.service';
 import { MonitorService } from './services/monitor.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DirectoryRepository, PermissionRepository, MonitorRepository])],
+  imports: [
+    forwardRef(() => SchedulerModule),
+    TypeOrmModule.forFeature([DirectoryRepository, PermissionRepository, MonitorRepository]),
+  ],
   controllers: [DirectoryController, MonitorController],
   providers: [DirectoryService, MonitorService],
+  exports: [MonitorService],
 })
 export class MonitorModule {}

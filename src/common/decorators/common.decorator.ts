@@ -184,7 +184,7 @@ export function IsEnumField(params?: { type?: any; isArray?: boolean; required?:
     params ||= {};
     const { isArray, type } = getPropMetaData(params, target, propertyKey);
 
-    ApiProperty({ required: params.required, isArray })(target, propertyKey);
+    ApiProperty({ enum: type, required: params.required, isArray })(target, propertyKey);
     IsEnum(type, { each: isArray })(target, propertyKey);
     Expose()(target, propertyKey);
 

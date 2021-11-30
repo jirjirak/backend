@@ -1,20 +1,28 @@
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-// pino.destination({
-// sync: false, // Asynchronous logging
-// }),
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { CronJob } from 'cron';
 import compression from 'fastify-compress';
 import * as helmet from 'fastify-helmet';
 
 import { AppModule } from './app.module';
+import './app/scheduler/services/scheduler.service';
+import { SchedulerService } from './app/scheduler/services/scheduler.service';
 import { MyLogger } from './common/basic/logger.basic';
 import { BootstrapService } from './common/service/bootstrap.service';
+import { setupSwagger } from './plugin/swagger.plugin';
 
 const logger = new Logger('main');
 
 async function bootstrap() {
+  // await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+  //   transport: Transport.REDIS,
+  //   options: {
+  //     url: 'redis://localhost:6379',
+  //   },
+  // });
+
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
     // logger: new MyLogger(),
     // bufferLogs: true,
@@ -49,15 +57,18 @@ async function bootstrap() {
 
   const bootstrapService = app.get<BootstrapService>(BootstrapService);
 
-  bootstrapService.setupSwagger(app);
+  // bootstrapService.setupSwagger(app);
+
+  setupSwagger(app);
 
   await app.listen(3000, '0.0.0.0');
 
-  const t = '*/1 * * * * *';
+  const a = app.get(SchedulerService);
 
-  const cron = new CronJob(t, () => {
-    console.log('before');
-  });
+  // a.addJob();
+  // a.addJob();
+  // a.addJob();
+  // a.addJob();
 
   logger.log(`Application is running on: ${await app.getUrl()}`);
   logger.log(`Swagger is running on: ${await app.getUrl()}/v1/swagger`);

@@ -118,7 +118,7 @@ export class BasicRepository<Entity> extends Repository<Entity> {
 
   async updateById(
     id: number,
-    data: QueryDeepPartialEntity<Entity> | any,
+    data: QueryDeepPartialEntity<Entity>,
     options?: { returning?: boolean; relations?: string[] },
   ): Promise<Entity> {
     this.logPerformanceStart();
@@ -130,7 +130,7 @@ export class BasicRepository<Entity> extends Repository<Entity> {
     data = { ...data, id };
 
     try {
-      await super.save(data);
+      await super.save(data as any);
     } catch (e) {
       this.logger.error(e.message, 'QUERY');
       throw new InternalServerErrorException();
