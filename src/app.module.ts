@@ -1,3 +1,4 @@
+import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,6 +13,8 @@ import { SchedulerModule } from './app/scheduler/scheduler.module';
 import { TagModule } from './app/tag/tag.module';
 import { CommonModule } from './common/common.module';
 import { typeOrmCOnfig } from './config/typeorm.config';
+import { QueueModule } from './app/queue/queue.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -23,6 +26,15 @@ import { typeOrmCOnfig } from './config/typeorm.config';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => typeOrmCOnfig(configService),
     }),
+    BullModule.forRootAsync({
+      useFactory: () => ({
+        redis: {
+          host: 'localhost',
+          port: 6379,
+        },
+      }),
+    }),
+    ScheduleModule.forRoot(),
     AuthModule,
     CommonModule,
     AccountModule,
@@ -32,6 +44,7 @@ import { typeOrmCOnfig } from './config/typeorm.config';
     EventModule,
     DataCenterModule,
     HeartbeatModule,
+    QueueModule,
   ],
   controllers: [],
   providers: [],

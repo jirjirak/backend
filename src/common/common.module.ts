@@ -1,4 +1,5 @@
 import { Global, Module } from '@nestjs/common';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { MonitorModule } from '../app/monitor/monitor.module';
 import { SchedulerModule } from '../app/scheduler/scheduler.module';
@@ -9,6 +10,6 @@ import { UtilsService } from './service/utils.service';
 @Module({
   imports: [MonitorModule, SchedulerModule],
   providers: [BootstrapService, UtilsService],
-  exports: [UtilsService],
+  exports: [UtilsService, BootstrapService],
 })
 export class CommonModule {}

@@ -2,8 +2,11 @@ import { Logger } from '@nestjs/common';
 import { AxiosInstance } from 'axios';
 
 import { InjectableService } from '../../../common/decorators/common.decorator';
+import { EventHandlerService } from '../../event/services/event-handler.service';
 import { UtilsService } from '../../../common/service/utils.service';
 import { Monitor } from '../../monitor/entity/monitor.entity';
+import { Queue } from 'bull';
+import { InjectQueue } from '@nestjs/bull';
 
 @InjectableService()
 export class HealthCheckService {
@@ -15,7 +18,7 @@ export class HealthCheckService {
     this.axios = this.utilsService.getAxiosInstance();
   }
 
-  private async sendHttpRequest(monitor: Monitor) {
+  private async sendHttpRequest(monitor: Monitor): Promise<void> {
     this.axios({
       // method: monitor.method as Method,
       url: 'https://api.doctop.com/ali',
@@ -24,15 +27,14 @@ export class HealthCheckService {
       // timeout: monitor.timeOut,
     })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((e) => {
-        console.log(e);
-      })
-      .finally(() => {});
+        // console.log(e);
+      });
   }
 
-  async httpHealthCheck(monitors: Monitor[]) {
+  async httpHealthCheck(monitors: Monitor[]): Promise<void> {
     console.log(monitors.map((m) => m.friendlyName));
 
     const jobTriggeredAt = this.utilsService.currentTime();
@@ -40,14 +42,5 @@ export class HealthCheckService {
     for (const monitor of monitors) {
       this.sendHttpRequest(monitor);
     }
-
-    const timings = {
-      startAt: process.hrtime(),
-      dnsLookupAt: undefined,
-      tcpConnectionAt: undefined,
-      tlsHandshakeAt: undefined,
-      firstByteAt: undefined,
-      endAt: undefined,
-    };
   }
 }
