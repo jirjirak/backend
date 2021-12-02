@@ -9,7 +9,7 @@ export class UtilsService {
   }
 
   getAxiosInstance(): AxiosInstance {
-    const instance = axios.create();
+    const instance = axios.create({});
 
     instance.interceptors.request.use((req) => {
       return req;
