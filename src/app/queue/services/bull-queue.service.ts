@@ -47,11 +47,11 @@ export class BullQueueService implements BasicQueue {
     });
   }
 
-  // @Cron('*/15 * * * * *')
-  async clearQueue(): Promise<void> {
-    for (const queue of Object.keys(Queues)) {
-      if (queue === Queues.Events) {
-        await this.eventQueue.clean(10000, 'completed');
+  @Cron('*/15 * * * * *')
+  clearQueue(): void {
+    for (const [, value] of Object.entries(Queues)) {
+      if (value === Queues.Events) {
+        Promise.all([this.eventQueue.clean(15000, 'completed'), this.eventQueue.clean(15000, 'failed')]);
       }
     }
   }

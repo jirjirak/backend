@@ -1,6 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback } from 'bull';
 import { InjectableService } from '../../../common/decorators/common.decorator';
+import { wait } from '../../../common/functions/utils.func';
 import { Queues } from '../../queue/queue.module';
 
 @Processor(Queues.Events)

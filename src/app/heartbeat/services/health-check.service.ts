@@ -2,23 +2,23 @@ import { Logger } from '@nestjs/common';
 import { AxiosInstance } from 'axios';
 
 import { InjectableService } from '../../../common/decorators/common.decorator';
-import { EventHandlerService } from '../../event/services/event-handler.service';
 import { UtilsService } from '../../../common/service/utils.service';
 import { Monitor } from '../../monitor/entity/monitor.entity';
-import { Queue } from 'bull';
-import { InjectQueue } from '@nestjs/bull';
+import { Queues } from '../../queue/queue.module';
+import { QueueService } from '../../queue/services/queue.service';
 
 @InjectableService()
 export class HealthCheckService {
   logger = new Logger();
-
   axios: AxiosInstance;
 
-  constructor(private utilsService: UtilsService) {
+  constructor(private utilsService: UtilsService, private queueService: QueueService) {
     this.axios = this.utilsService.getAxiosInstance();
   }
 
   private async sendHttpRequest(monitor: Monitor): Promise<void> {
+    this.queueService.sendEvent(Queues.Events, { ok: true });
+
     this.axios({
       // method: monitor.method as Method,
       url: 'https://api.doctop.com/ali',
