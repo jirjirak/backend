@@ -13,6 +13,6 @@ export function typeOrmCOnfig(configService: ConfigService): TypeOrmModuleOption
     entities: ['dist/**/*.entity{.ts,.js}'],
     retryAttempts: 1,
     synchronize: true,
-    logging: true,
+    logging: false,
   };
 }

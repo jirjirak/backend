@@ -7,4 +7,5 @@ export interface JobStorage {
   expression: string;
   cron: CronJob;
   type: MonitorType;
+  monitors: Monitor[];
 }

@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
 import { User } from '../../account/entities/user.entity';
@@ -16,9 +16,8 @@ export class Monitor extends BasicEntity {
   @JoinColumn()
   creator: User;
 
-  // @ManyToOne(() => Team, { nullable: false })
-  // @JoinColumn()
-  // team: Team;
+  @OneToMany(() => Permission, (permission) => permission.monitor)
+  permissions: Permission[];
 
   @Column()
   interval: number;
@@ -35,14 +34,8 @@ export class Monitor extends BasicEntity {
   @Column()
   address: string;
 
-  @OneToMany(() => Permission, (permission) => permission.monitor)
-  permissions: Permission[];
-
   @Column({ enum: MonitorStatus, default: MonitorStatus.Waiting })
   status: MonitorStatus;
-
-  @Column({ nullable: true })
-  description: string;
 
   @Column({ default: false })
   flipStatus: boolean;
@@ -51,7 +44,7 @@ export class Monitor extends BasicEntity {
   errorTolerance: number;
 
   @Column({ nullable: true })
-  method: string;
+  description: string;
 
   @Column({ default: 5000 })
   timeOut: number;
@@ -59,8 +52,28 @@ export class Monitor extends BasicEntity {
   @Column({ default: 5000 })
   expectedResponseTime: number;
 
+  // http fields
+  @Column({ nullable: true })
+  method: string;
+
+  @Column({ nullable: true })
+  requestBody: string;
+
+  @Column({ nullable: true })
+  requestHeader: string;
+
+  @Column({ nullable: true })
+  requestParam: string;
+
+  @Column({ nullable: true })
+  requestQuery: string;
+
+  // ping fields
+
   @Column({ nullable: true })
   port: number;
+
+  // dns fields
 
   @Column({ enum: DnsQueryType, nullable: true })
   dnsQueryType: DnsQueryType;

@@ -2,7 +2,6 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SchedulerModule } from '../scheduler/scheduler.module';
-import { SchedulerService } from '../scheduler/services/scheduler.service';
 import { DirectoryController } from './controllers/directory.controller';
 import { MonitorController } from './controllers/monitor.controller';
 import { DirectoryRepository } from './repositories/directory.repository';

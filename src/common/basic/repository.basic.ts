@@ -1,10 +1,8 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
-import { isBoolean, isEmpty, isObject, isUndefined, omitBy } from 'lodash';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { isBoolean, isEmpty, isUndefined, omitBy } from 'lodash';
 import {
   FindConditions,
-  FindManyOptions,
   FindOneOptions,
-  getRepository,
   ObjectID,
   ObjectLiteral,
   QueryRunner,
@@ -158,7 +156,7 @@ export class BasicRepository<Entity> extends Repository<Entity> {
       pagination = Paginate(optionsOrConditions.page, optionsOrConditions.limit);
     }
 
-    const result = await super.find({ ...optionsOrConditions, ...pagination });
+    const result = await super.find({ ...optionsOrConditions, ...pagination } as any);
 
     this.logPerformanceEnd();
     return result;
@@ -172,17 +170,20 @@ export class BasicRepository<Entity> extends Repository<Entity> {
       pagination = Paginate(optionsOrConditions.page, optionsOrConditions.limit);
     }
 
-    const [result, total] = await super.findAndCount({ ...optionsOrConditions, ...pagination });
+    const [result, total] = await super.findAndCount({ ...optionsOrConditions, ...pagination } as any);
 
     this.logPerformanceEnd();
 
     return [result, total];
   }
 
-  async findOne(optionsOrConditions?: FindOneType<Entity>, maybeOptions?: FindOneOptionsType<Entity>): Promise<Entity> {
+  async findOne(
+    optionsOrConditions?: FindOneType<Entity> | any,
+    maybeOptions?: FindOneOptionsType<Entity> | any,
+  ): Promise<Entity> {
     this.logPerformanceStart();
 
-    const result = await super.findOne(optionsOrConditions, maybeOptions);
+    const result = await super.findOne(optionsOrConditions as any, maybeOptions);
 
     this.logPerformanceEnd();
     return result;
@@ -190,7 +191,7 @@ export class BasicRepository<Entity> extends Repository<Entity> {
 
   async count(optionsOrConditions?: FindManyType<Entity> | FindType<Entity>): Promise<number> {
     this.logPerformanceStart();
-    const result = await super.count(optionsOrConditions);
+    const result = await super.count(optionsOrConditions as any);
     this.logPerformanceEnd();
     return result;
   }

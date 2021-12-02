@@ -1,8 +1,14 @@
 import { Global, Module } from '@nestjs/common';
+
+import { MonitorModule } from '../app/monitor/monitor.module';
+import { SchedulerModule } from '../app/scheduler/scheduler.module';
 import { BootstrapService } from './service/bootstrap.service';
+import { UtilsService } from './service/utils.service';
 
 @Global()
 @Module({
-  providers: [BootstrapService],
+  imports: [MonitorModule, SchedulerModule],
+  providers: [BootstrapService, UtilsService],
+  exports: [UtilsService],
 })
 export class CommonModule {}

@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
 import { Session } from '../../auth/entities/session.entity';

@@ -1,11 +1,9 @@
 import { BadRequestException, Body, Get, Post } from '@nestjs/common';
-import { AzureActiveDirectoryServicePrincipalSecret } from 'typeorm/driver/sqlserver/authentication/AzureActiveDirectoryServicePrincipalSecret';
 
 import { BasicController } from '../../../common/basic/Basic.controller';
 import { IsOwner } from '../../../common/decorators/is-owner.decorator';
 import { UserRolePermission } from '../../../common/decorators/role-permission.decorator';
 import { StandardApi } from '../../../common/decorators/standard-api.decorator';
-import { Team } from '../../account/entities/team.entity';
 import { Role } from '../../auth/enum/role.enum';
 import { CreateDirectoryBodyDto, CreateDirectoryResDto } from '../dto/directory/create.dto';
 import { DirectoryLisRestDto } from '../dto/directory/list.dto';

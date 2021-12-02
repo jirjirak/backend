@@ -1,4 +1,3 @@
-import { IsBoolean } from 'class-validator';
 
 import { IsBooleanField, IsPrimaryKeyField } from '../../../../common/decorators/common.decorator';
 import { Team } from '../../../account/entities/team.entity';

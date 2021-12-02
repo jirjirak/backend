@@ -6,7 +6,7 @@ import { relationalFieldMetaData, RelationalFieldMetaDataKey } from '../decorato
 
 @Injectable()
 export class SerializeRelationalFieldPipe implements PipeTransform {
-  private transferData(ids: number[] | number): { id: number } | { id: number }[] {
+  private transferData(ids: any): { id: number } | { id: number }[] {
     if (isArray(ids)) {
       return ids.flatMap((i) => [{ id: +i }]);
     } else {

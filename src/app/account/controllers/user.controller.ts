@@ -3,7 +3,6 @@ import { Request } from 'express';
 import * as UserAgentParser from 'ua-parser-js';
 
 import { BasicController } from '../../../common/basic/Basic.controller';
-import { IsStringField } from '../../../common/decorators/common.decorator';
 import { GetUser } from '../../../common/decorators/get-user.decorator';
 import { UserRolePermission } from '../../../common/decorators/role-permission.decorator';
 import { StandardApi } from '../../../common/decorators/standard-api.decorator';

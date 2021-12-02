@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { isArray, isEmpty } from 'lodash';
-import { getManager, getRepository, In } from 'typeorm';
+import { getRepository, In } from 'typeorm';
 
 import { Team } from '../../account/entities/team.entity';
 import { User } from '../../account/entities/user.entity';

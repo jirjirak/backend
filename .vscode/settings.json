@@ -1,3 +1,14 @@
 {
-  "cSpell.words": ["DNSKEY", "EXPIREIN", "Fastify", "jirjirak", "metatype", "Microservices", "nestjs", "pino", "uuidv"]
+  "cSpell.words": [
+    "DNSKEY",
+    "EXPIREIN",
+    "Fastify",
+    "jirjirak",
+    "metatype",
+    "Microservices",
+    "nestjs",
+    "pino",
+    "szmarczak",
+    "uuidv"
+  ]
 }

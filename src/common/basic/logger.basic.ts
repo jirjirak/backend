@@ -1,4 +1,4 @@
-import { ConsoleLogger, Logger, LoggerService } from '@nestjs/common';
+import { ConsoleLogger } from '@nestjs/common';
 import { pino } from 'pino';
 
 const logger = pino(

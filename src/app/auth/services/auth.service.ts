@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { LessThan, MoreThan } from 'typeorm';
+import { MoreThan } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { InjectableService } from '../../../common/decorators/common.decorator';

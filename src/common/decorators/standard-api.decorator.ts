@@ -1,5 +1,5 @@
-import { HttpCode, HttpStatus, Logger, RequestMethod, UseInterceptors, UsePipes, Version } from '@nestjs/common';
-import { ApiBody, ApiQuery } from '@nestjs/swagger';
+import { HttpCode, HttpStatus, Logger, RequestMethod, UsePipes, Version } from '@nestjs/common';
+import { ApiBody } from '@nestjs/swagger';
 
 import { SerializeRelationalFieldPipe } from '../pipes/serialize-relational-field.pipe';
 import { CustomApiOperation } from './customApiOperation';

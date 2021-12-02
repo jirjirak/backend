@@ -1,9 +1,7 @@
-import { ForbiddenException } from '@nestjs/common';
 
 import { InjectableService } from '../../../common/decorators/common.decorator';
 import { ListToTree } from '../../../common/functions/list-to-tree.func';
 import { Team } from '../../account/entities/team.entity';
-import { User } from '../../account/entities/user.entity';
 import { Directory } from '../entity/directory.entity';
 import { DirectoryRepository } from '../repositories/directory.repository';
 

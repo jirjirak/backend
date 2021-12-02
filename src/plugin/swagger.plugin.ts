@@ -1,6 +1,5 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
-import { writeFileSync, mkdirSync } from 'fs';
 
 const cleanupDocument = (document: OpenAPIObject, exclude?: string[]): void => {
   for (const [path, pathValue] of Object.entries(document.paths)) {
