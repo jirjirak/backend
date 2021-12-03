@@ -1,12 +1,13 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { EventModule } from '../event/event.module';
 import { QueueModule } from '../queue/queue.module';
 
 import { HealthCheckService } from './services/health-check.service';
+import { HttpHealthCheckService } from './services/http-health-check.service';
 
 @Module({
-  imports: [EventModule, QueueModule],
-  providers: [HealthCheckService],
+  imports: [forwardRef(() => EventModule), QueueModule],
+  providers: [HealthCheckService, HttpHealthCheckService],
   exports: [HealthCheckService],
 })
 export class HeartbeatModule {}

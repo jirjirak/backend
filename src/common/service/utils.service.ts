@@ -4,8 +4,8 @@ import { InjectableService } from '../decorators/common.decorator';
 
 @InjectableService()
 export class UtilsService {
-  currentTime(): string {
-    return new Date().toISOString().slice(0, 19);
+  currentTime(): Date {
+    return new Date(new Date().toISOString().slice(0, 19));
   }
 
   getAxiosInstance(): AxiosInstance {

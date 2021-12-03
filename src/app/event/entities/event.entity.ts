@@ -5,21 +5,51 @@ import { Monitor } from '../../monitor/entity/monitor.entity';
 
 @Entity()
 export class Event extends BasicEntity {
-  @ManyToOne(() => Monitor)
+  @ManyToOne(() => Monitor, { nullable: false })
   @JoinColumn()
   monitor: Monitor;
 
   @Column()
-  start: Date;
+  triggeredAt: Date;
 
-  @Column()
-  end: Date;
+  @Column({ nullable: true })
+  startAt: number;
 
-  @Column()
-  status: string;
+  @Column({ nullable: true })
+  endAt: number;
 
   // http fields
 
   @Column({ nullable: true })
+  dnsLookupAt: number;
+
+  @Column({ nullable: true })
+  tcpConnectionAt: number;
+
+  @Column({ nullable: true })
+  tlsHandshakeAt: number;
+
+  @Column({ nullable: true })
+  contentTransferAt: number;
+
+  @Column({ nullable: true })
+  firstByteAt: number;
+
+  @Column({ nullable: true })
   statusCode: number;
+
+  @Column({ nullable: true })
+  resBody: string;
+
+  @Column({ nullable: true })
+  reqBody: string;
+
+  @Column({ nullable: true })
+  resHeader: string;
+
+  @Column({ nullable: true })
+  reqHeader: string;
+
+  @Column({ nullable: true })
+  reqQuery: string;
 }

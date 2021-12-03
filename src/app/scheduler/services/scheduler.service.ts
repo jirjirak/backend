@@ -3,6 +3,7 @@ import { isEmpty } from 'class-validator';
 import { CronJob } from 'cron';
 
 import { InjectableService } from '../../../common/decorators/common.decorator';
+import { UtilsService } from '../../../common/service/utils.service';
 import { HealthCheckService } from '../../heartbeat/services/health-check.service';
 import { Monitor } from '../../monitor/entity/monitor.entity';
 import { MonitorStatus, MonitorType } from '../../monitor/enum/monitor.enum';
@@ -14,7 +15,11 @@ export class SchedulerService {
   jobs: JobStorage[] = [];
   logger = new Logger('Scheduler');
 
-  constructor(private healthCheckService: HealthCheckService, private monitorService: MonitorService) {}
+  constructor(
+    private utilsService: UtilsService,
+    private healthCheckService: HealthCheckService,
+    private monitorService: MonitorService,
+  ) {}
 
   private generateRadomNumber(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -54,7 +59,7 @@ export class SchedulerService {
 
     if (monitor.type === MonitorType.Http) {
       cron = new CronJob(expression, async () => {
-        //
+        const jobTriggeredAt = this.utilsService.currentTime();
 
         const job = this.findJob(expression, monitor.type);
 
@@ -62,7 +67,7 @@ export class SchedulerService {
           throw new Error(`job ${expression} - ${monitor.type} notfound`);
         }
 
-        this.healthCheckService.httpHealthCheck(job.monitors);
+        await this.healthCheckService.healthCheck(job.monitors, jobTriggeredAt);
       });
     }
 
