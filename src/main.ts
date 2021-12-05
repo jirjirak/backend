@@ -55,6 +55,8 @@ async function bootstrap(): Promise<void> {
 
   const bootstrapService = app.get<BootstrapService>(BootstrapService);
 
+  await bootstrapService.initBefore();
+
   setupSwagger(app);
 
   const bullServerAdapter = new BullFastifyAdapter();

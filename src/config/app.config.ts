@@ -1,5 +1,3 @@
-import { ConfigService } from '@nestjs/config';
+type NodeEnvType = 'development' | 'production' | 'test';
 
-export function appConfig(configService: ConfigService) {
-  return {};
-}
+export const NODE_ENV: NodeEnvType = (process.env.NODE_ENV as NodeEnvType) || 'development';

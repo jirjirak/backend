@@ -7,6 +7,7 @@ import { writeFileSync } from 'fs';
 import { Monitor } from '../../app/monitor/entity/monitor.entity';
 import { MonitorService } from '../../app/monitor/services/monitor.service';
 import { SchedulerService } from '../../app/scheduler/services/scheduler.service';
+import { RedisService } from './redis.service';
 
 @Injectable()
 export class BootstrapService {
@@ -16,9 +17,10 @@ export class BootstrapService {
     private configService: ConfigService,
     private monitorService: MonitorService,
     private schedulerService: SchedulerService,
+    private redisService: RedisService,
   ) {}
 
-  async generateSecreteKey() {
+  async generateSecreteKey(): Promise<void> {
     const secreteKey = this.configService.get<string>('SECRETE_KEY');
 
     if (!secreteKey) {
@@ -26,7 +28,7 @@ export class BootstrapService {
     }
   }
 
-  setupSwagger(app: INestApplication) {
+  setupSwagger(app: INestApplication): void {
     const config = new DocumentBuilder()
       .setTitle('JirJirak')
       .setDescription('JirJirak Api Document')
@@ -39,7 +41,11 @@ export class BootstrapService {
     SwaggerModule.setup('/v1/swagger', app, document);
   }
 
-  async loadMonitors() {
+  private async initializeService(): Promise<void> {
+    this.redisService.init();
+  }
+
+  async loadMonitors(): Promise<void> {
     let monitors: Monitor[];
 
     this.logger.log(`loading Monitors`);
@@ -63,5 +69,12 @@ export class BootstrapService {
     }
 
     this.logger.log(`Monitors loaded`);
+  }
+
+  async initBefore(): Promise<void> {
+    await this.initializeService();
+
+    // load monitors
+    // await this.loadMonitors();
   }
 }

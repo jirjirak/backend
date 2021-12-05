@@ -8,6 +8,8 @@ import { HttpTiming, HttpHealthCheckResult } from '../interfaces/http.interface'
 import * as http from 'http';
 import * as https from 'https';
 import { EventService } from '../../event/services/event.service';
+import { MonitorStatus, MonitorUptimeStatus } from '../../monitor/enum/monitor.enum';
+import { Event } from '../../event/entities/event.entity';
 
 @InjectableService()
 export class HttpHealthCheckService {
@@ -149,5 +151,42 @@ export class HttpHealthCheckService {
     } catch (error) {
       return false;
     }
+  }
+
+  private checkStatusCode(monitor: Monitor, event: Event): boolean {
+    const statusCode = event.statusCode;
+
+    const minStatusCode = monitor.ExpectedMinStatusCode || 200;
+    const maxStatueCode = monitor.ExpectedMaxStatusCode || 299;
+
+    if (statusCode >= minStatusCode && statusCode <= maxStatueCode) {
+      return true;
+    }
+
+    return false;
+  }
+
+  private checkError(monitor: Monitor, event: Event): boolean {
+    if (event.error || event.errorCode) {
+      return false;
+    }
+
+    return true;
+  }
+
+  async httpHealthCheckResultIsOk(monitor: Monitor, event: Event): Promise<boolean> {
+    let isOk: boolean;
+
+    isOk = this.checkError(monitor, event);
+    if (!isOk) {
+      return isOk;
+    }
+
+    isOk = this.checkStatusCode(monitor, event);
+    if (!isOk) {
+      return isOk;
+    }
+
+    return isOk;
   }
 }

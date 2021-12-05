@@ -15,6 +15,7 @@ import { CommonModule } from './common/common.module';
 import { typeOrmCOnfig } from './config/typeorm.config';
 import { QueueModule } from './app/queue/queue.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { BullConfig } from './config/bull.config';
 
 @Module({
   imports: [
@@ -27,12 +28,9 @@ import { ScheduleModule } from '@nestjs/schedule';
       useFactory: (configService: ConfigService) => typeOrmCOnfig(configService),
     }),
     BullModule.forRootAsync({
-      useFactory: () => ({
-        redis: {
-          host: 'localhost',
-          port: 6379,
-        },
-      }),
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => BullConfig(configService),
     }),
     ScheduleModule.forRoot(),
     AuthModule,

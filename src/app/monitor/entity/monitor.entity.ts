@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
 import { User } from '../../account/entities/user.entity';
-import { DnsQueryType, MonitorStatus, MonitorType } from '../enum/monitor.enum';
+import { Worker } from '../../data-center/entities/worker.entity';
+import { DnsQueryType, MonitorStatus, MonitorType, MonitorUptimeStatus } from '../enum/monitor.enum';
 import { Directory } from './directory.entity';
 import { Permission } from './permission.entity';
 
@@ -16,8 +17,14 @@ export class Monitor extends BasicEntity {
   @JoinColumn()
   creator: User;
 
+  @ManyToMany(() => Worker)
+  workers: Worker[];
+
   @OneToMany(() => Permission, (permission) => permission.monitor)
   permissions: Permission[];
+
+  @Column({ type: 'enum', enum: MonitorUptimeStatus, default: MonitorUptimeStatus.Unknown })
+  uptimeStatus: MonitorUptimeStatus;
 
   @Column()
   interval: number;
@@ -34,7 +41,7 @@ export class Monitor extends BasicEntity {
   @Column()
   address: string;
 
-  @Column({ enum: MonitorStatus, default: MonitorStatus.Waiting })
+  @Column({ type: 'enum', enum: MonitorStatus, default: MonitorStatus.Waiting })
   status: MonitorStatus;
 
   @Column({ default: false })
@@ -57,6 +64,12 @@ export class Monitor extends BasicEntity {
   method: string;
 
   @Column({ nullable: true })
+  ExpectedMinStatusCode: number;
+
+  @Column({ nullable: true })
+  ExpectedMaxStatusCode: number;
+
+  @Column({ nullable: true })
   requestBody: string;
 
   @Column({ nullable: true })
@@ -67,6 +80,12 @@ export class Monitor extends BasicEntity {
 
   @Column({ nullable: true })
   requestQuery: string;
+
+  @Column({ nullable: true })
+  ExpectedResBody: string;
+
+  @Column({ nullable: true })
+  ExpectedResHeader: string;
 
   // ping fields
 

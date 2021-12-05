@@ -6,6 +6,12 @@ export enum MonitorType {
   Ping = 'ping',
 }
 
+export enum MonitorUptimeStatus {
+  Up = 'up',
+  Down = 'down',
+  Unknown = 'unknown',
+}
+
 export enum MonitorStatus {
   Enabled = 'enabled',
   Disabled = 'disabled',
@@ -26,4 +32,15 @@ export enum DnsQueryType {
   TXT = 'TXT',
   CERT = 'CERT',
   DNSKEY = 'DNSKEY',
+}
+
+export enum TcpQueryType {
+  Connect = 'connect',
+  ConnectTimeout = 'connect_timeout',
+  Send = 'send',
+  SendTimeout = 'send_timeout',
+  Receive = 'receive',
+  ReceiveTimeout = 'receive_timeout',
+  Close = 'close',
+  CloseTimeout = 'close_timeout',
 }

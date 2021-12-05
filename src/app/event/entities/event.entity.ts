@@ -18,6 +18,15 @@ export class Event extends BasicEntity {
   @Column({ nullable: true })
   endAt: number;
 
+  @Column({ default: false })
+  isOk: boolean;
+
+  @Column({ nullable: true })
+  error: string;
+
+  @Column({ nullable: true })
+  errorCode: number;
+
   // http fields
 
   @Column({ nullable: true })

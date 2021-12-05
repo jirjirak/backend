@@ -1,10 +1,15 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
+import { Monitor } from '../../monitor/entity/monitor.entity';
 import { DataCenter } from './data-center.entity';
 
 @Entity()
 export class Worker extends BasicEntity {
+  @ManyToMany(() => Monitor)
+  @JoinColumn()
+  monitors: Monitor[];
+
   @Column()
   ipv4: string;
 
