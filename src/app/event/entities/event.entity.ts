@@ -13,16 +13,16 @@ export class Event extends BasicEntity {
   triggeredAt: Date;
 
   @Column({ nullable: true })
-  startAt: number;
+  startAt: Date;
 
   @Column({ nullable: true })
-  endAt: number;
+  endAt: Date;
 
   @Column({ default: false })
   isOk: boolean;
 
   @Column({ nullable: true })
-  error: string;
+  errorMessage: string;
 
   @Column({ nullable: true })
   errorCode: number;
@@ -30,19 +30,19 @@ export class Event extends BasicEntity {
   // http fields
 
   @Column({ nullable: true })
-  dnsLookupAt: number;
+  dnsLookup: number;
 
   @Column({ nullable: true })
-  tcpConnectionAt: number;
+  tcpConnection: number;
 
   @Column({ nullable: true })
-  tlsHandshakeAt: number;
+  tlsHandshake: number;
 
   @Column({ nullable: true })
-  contentTransferAt: number;
+  contentTransfer: number;
 
   @Column({ nullable: true })
-  firstByteAt: number;
+  firstByte: number;
 
   @Column({ nullable: true })
   statusCode: number;

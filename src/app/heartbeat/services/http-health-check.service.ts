@@ -4,11 +4,10 @@ import { InjectableService } from '../../../common/decorators/common.decorator';
 import { Monitor } from '../../monitor/entity/monitor.entity';
 import { Queues } from '../../queue/queue.module';
 import { QueueService } from '../../queue/services/queue.service';
-import { HttpTiming, HttpHealthCheckResult } from '../interfaces/http.interface';
+import { HttpTiming } from '../interfaces/http.interface';
 import * as http from 'http';
 import * as https from 'https';
 import { EventService } from '../../event/services/event.service';
-import { MonitorStatus, MonitorUptimeStatus } from '../../monitor/enum/monitor.enum';
 import { Event } from '../../event/entities/event.entity';
 
 @InjectableService()
@@ -101,56 +100,24 @@ export class HttpHealthCheckService {
     const tlsHandshake = tlsHandshakeAt !== undefined ? this.getDuration(tcpConnectionAt, tlsHandshakeAt) : undefined;
     const firstByte = this.getDuration(tlsHandshakeAt || tcpConnectionAt, firstByteAt);
     const contentTransfer = this.getDuration(firstByteAt, endAt);
-    const total = this.getDuration(startAt, endAt);
 
-    const data: HttpHealthCheckResult = {
+    const data: Partial<Event> = {
       triggeredAt,
       monitor,
-      body,
+      resBody: JSON.stringify(body),
       statusCode,
-      error,
-      timing: {
-        startAt,
-        endAt,
-        dnsLookup,
-        tcpConnection,
-        tlsHandshake,
-        firstByte,
-        contentTransfer,
-        total,
-      },
+      errorMessage: error?.message,
+      startAt: new Date(startAt),
+      endAt: new Date(endAt),
+      dnsLookup,
+      tcpConnection,
+      tlsHandshake,
+      firstByte,
+      contentTransfer,
+      errorCode: error?.['code'],
     };
 
     await this.queueService.sendEvent(Queues.Events, data);
-  }
-
-  async healthCheck(monitors: Monitor[], jobTriggeredAt: Date): Promise<void> {
-    for (const monitor of monitors) {
-      this.sendHttpRequest(monitor, jobTriggeredAt);
-    }
-  }
-
-  async saveHttpHealthCheckResult(data: HttpHealthCheckResult): Promise<boolean> {
-    const { body, statusCode, timing, monitor, triggeredAt } = data;
-
-    try {
-      await this.eventService.saveEvent([
-        {
-          resBody: body,
-          statusCode,
-          monitor,
-          triggeredAt,
-          // dnsLookupAt: dnsLookup,
-          // tcpConnectionAt: tcpConnection,
-          // tlsHandshakeAt: tlsHandshake,
-          // firstByteAt: firstByte,
-          // contentTransferAt: contentTransfer,
-        },
-      ]);
-      return true;
-    } catch (error) {
-      return false;
-    }
   }
 
   private checkStatusCode(monitor: Monitor, event: Event): boolean {
@@ -167,15 +134,16 @@ export class HttpHealthCheckService {
   }
 
   private checkError(monitor: Monitor, event: Event): boolean {
-    if (event.error || event.errorCode) {
+    if (event.errorMessage || event.errorCode) {
       return false;
     }
 
     return true;
   }
 
-  async httpHealthCheckResultIsOk(monitor: Monitor, event: Event): Promise<boolean> {
-    let isOk: boolean;
+  // chose a name better than this
+  private async httpHealthCheckResultIsOk(monitor: Monitor, event: Event): Promise<boolean> {
+    let isOk = true;
 
     isOk = this.checkError(monitor, event);
     if (!isOk) {
@@ -188,5 +156,16 @@ export class HttpHealthCheckService {
     }
 
     return isOk;
+  }
+
+  async healthCheck(monitors: Monitor[], jobTriggeredAt: Date): Promise<void> {
+    for (const monitor of monitors) {
+      this.sendHttpRequest(monitor, jobTriggeredAt);
+    }
+  }
+
+  async saveHttpHealthCheckResult(event: Event): Promise<Event> {
+    const isOk = await this.httpHealthCheckResultIsOk(event.monitor, event);
+    return await this.eventService.saveEvent({ ...event, isOk });
   }
 }

@@ -1,5 +1,4 @@
 import { DeepPartial } from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { InjectableService } from '../../../common/decorators/common.decorator';
 import { Event } from '../entities/event.entity';
 import { EventRepository } from '../repositories/event.repository';
@@ -8,7 +7,7 @@ import { EventRepository } from '../repositories/event.repository';
 export class EventService {
   constructor(private eventRepository: EventRepository) {}
 
-  async saveEvent(events: DeepPartial<Event[]>): Promise<void> {
-    await this.eventRepository.createQueryBuilder('event').insert().values(events).execute();
+  async saveEvent(event: DeepPartial<Event>): Promise<Event> {
+    return await this.eventRepository.createAndSave(event, { relations: ['monitor'] });
   }
 }

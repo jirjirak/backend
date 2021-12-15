@@ -5,6 +5,7 @@ import { Monitor } from '../../monitor/entity/monitor.entity';
 import { QueueService } from '../../queue/services/queue.service';
 import { MonitorType } from '../../monitor/enum/monitor.enum';
 import { HttpHealthCheckService } from './http-health-check.service';
+import { Event } from '../../event/entities/event.entity';
 
 @InjectableService()
 export class HealthCheckService {
@@ -20,11 +21,15 @@ export class HealthCheckService {
     }
   }
 
-  async saveHealthCheckResult(data: any): Promise<boolean> {
-    let status = true;
+  async saveHealthCheckResult(data: Event): Promise<Event> {
+    // get monitor here
 
-    status = await this.httpHealthCheckService.saveHttpHealthCheckResult(data);
-
-    return status;
+    return await this.httpHealthCheckService.saveHttpHealthCheckResult(data);
   }
+
+  // async checkEventIsOK(event: Event): Promise<boolean> {
+  //   if (event.monitor.type === MonitorType.Http) {
+  //     return await this.httpHealthCheckService.httpHealthCheckResultIsOk(event.monitor, event);
+  //   }
+  // }
 }
