@@ -1,3 +1,4 @@
+import { DataCenter } from 'src/app/data-center/entities/data-center.entity';
 import { Worker } from 'src/app/worker/entities/worker.entity';
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 
@@ -9,20 +10,6 @@ import { Permission } from './permission.entity';
 
 @Entity()
 export class Monitor extends BasicEntity {
-  @ManyToOne(() => Directory, { nullable: false })
-  @JoinColumn()
-  directory: Directory;
-
-  @ManyToOne(() => User, { nullable: false })
-  @JoinColumn()
-  creator: User;
-
-  @ManyToMany(() => Worker)
-  workers: Worker[];
-
-  @OneToMany(() => Permission, (permission) => permission.monitor)
-  permissions: Permission[];
-
   @Column({ type: 'enum', enum: MonitorUptimeStatus, default: MonitorUptimeStatus.Unknown })
   uptimeStatus: MonitorUptimeStatus;
 
@@ -99,4 +86,23 @@ export class Monitor extends BasicEntity {
 
   @Column({ nullable: true })
   dnsValue: string;
+
+  // relations
+
+  @ManyToOne(() => Directory, { nullable: false })
+  @JoinColumn()
+  directory: Directory;
+
+  @ManyToOne(() => User, { nullable: false })
+  @JoinColumn()
+  creator: User;
+
+  @ManyToMany(() => Worker)
+  workers: Worker[];
+
+  @ManyToMany(() => DataCenter)
+  dataCenters: DataCenter[];
+
+  @OneToMany(() => Permission, (permission) => permission.monitor)
+  permissions: Permission[];
 }

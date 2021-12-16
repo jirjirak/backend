@@ -1,4 +1,5 @@
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+import { Monitor } from 'src/app/monitor/entity/monitor.entity';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
 import { Team } from '../../account/entities/team.entity';
@@ -30,4 +31,8 @@ export class DataCenter extends BasicEntity {
   @ManyToMany(() => Tag)
   @JoinTable()
   tags: Tag[];
+
+  @ManyToMany(() => Monitor)
+  @JoinColumn()
+  monitors: Monitor[];
 }

@@ -15,6 +15,7 @@ import { AppModule } from './app.module';
 import './app/scheduler/services/scheduler.service';
 import { BootstrapService } from './common/service/bootstrap.service';
 import { setupSwagger } from './plugin/swagger.plugin';
+import { PORT } from './config/app.config';
 
 const logger = new Logger('main');
 
@@ -75,11 +76,11 @@ async function bootstrap(): Promise<void> {
 
   await app.startAllMicroservices();
 
-  await app.listen(3000, '0.0.0.0');
+  await app.listen(PORT, '0.0.0.0');
 
   await bootstrapService.loadMonitors();
 
   logger.log(`Application is running on: ${await app.getUrl()}`);
-  logger.log(`Swagger is running on: ${await app.getUrl()}/v1/swagger`);
+  logger.log(`Swagger is running on: ${await app.getUrl()}/swagger`);
 }
 bootstrap();

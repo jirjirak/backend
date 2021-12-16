@@ -6,12 +6,11 @@ import { Monitor } from '../../monitor/entity/monitor.entity';
 
 @Entity()
 export class Worker extends BasicEntity {
-  @ManyToMany(() => Monitor)
-  @JoinColumn()
-  monitors: Monitor[];
-
-  @Column()
+  @Column({ nullable: false })
   ipv4: string;
+
+  @Column({ nullable: false })
+  ipv6: string;
 
   @Column()
   status: string;
@@ -19,10 +18,14 @@ export class Worker extends BasicEntity {
   @Column({ default: 100000 })
   requestPerSecond: number;
 
-  @Column({ default: 'asdsadasdsadasdasdasdas' })
-  token: string;
+  @Column({ type: 'uuid' })
+  uuid: string;
 
-  @ManyToOne(() => DataCenter)
+  @ManyToOne(() => DataCenter, { nullable: false })
   @JoinColumn()
   dataCenter: DataCenter;
+
+  @ManyToMany(() => Monitor)
+  @JoinColumn()
+  monitors: Monitor[];
 }

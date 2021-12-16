@@ -2,7 +2,7 @@ import { Logger } from '@nestjs/common';
 import { isEmpty } from 'class-validator';
 import { CronJob } from 'cron';
 import { WorkerService } from 'src/app/worker/services/worker.service';
-import { isMonolithArchitecture } from 'src/config/app.config';
+import { isMonolithArchitecture, isWorkerMode } from 'src/config/app.config';
 
 import { InjectableService } from '../../../common/decorators/common.decorator';
 import { UtilsService } from '../../../common/service/utils.service';
@@ -14,7 +14,6 @@ import { JobStorage } from '../interface/scheduler.interface';
 
 @InjectableService()
 export class SchedulerService {
-  jobs: JobStorage[] = [];
   logger = new Logger('Scheduler');
 
   constructor(private workerService: WorkerService) {}
@@ -23,8 +22,11 @@ export class SchedulerService {
     await this.workerService.ProcessMonitors(monitors);
   }
 
-  // async assignWorkerToMonitor(monitor: Monitor) {
-  // if (isMonolithArchitecture) {
-  // }
-  // }
+  async assignWorkerToMonitor(monitor: Monitor): Promise<void> {
+    if (isMonolithArchitecture) {
+      await this.ProcessMonitors([monitor]);
+    } else {
+      // do stuff
+    }
+  }
 }
