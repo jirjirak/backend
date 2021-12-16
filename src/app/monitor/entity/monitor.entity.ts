@@ -1,8 +1,8 @@
+import { Worker } from 'src/app/worker/entities/worker.entity';
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
 import { User } from '../../account/entities/user.entity';
-import { Worker } from '../../data-center/entities/worker.entity';
 import { DnsQueryType, MonitorStatus, MonitorType, MonitorUptimeStatus } from '../enum/monitor.enum';
 import { Directory } from './directory.entity';
 import { Permission } from './permission.entity';

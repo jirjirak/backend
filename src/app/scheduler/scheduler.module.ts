@@ -1,11 +1,10 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
-import { HeartbeatModule } from '../heartbeat/heartbeat.module';
-import { MonitorModule } from '../monitor/monitor.module';
+import { WorkerModule } from '../worker/worker.module';
 import { SchedulerService } from './services/scheduler.service';
 
 @Module({
-  imports: [HeartbeatModule, forwardRef(() => MonitorModule)],
+  imports: [WorkerModule],
   providers: [SchedulerService],
   exports: [SchedulerService],
 })

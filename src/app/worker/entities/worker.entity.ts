@@ -1,8 +1,8 @@
+import { DataCenter } from 'src/app/data-center/entities/data-center.entity';
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
 import { Monitor } from '../../monitor/entity/monitor.entity';
-import { DataCenter } from './data-center.entity';
 
 @Entity()
 export class Worker extends BasicEntity {
