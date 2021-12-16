@@ -17,11 +17,7 @@ export class MonitorService {
   async createMonitor(user: User, data: CreateMonitorBodyDto): Promise<Monitor> {
     const { address, directory, type } = data;
 
-    let status: MonitorStatus;
-
-    if (data.status === MonitorStatus.Enabled) {
-      status = MonitorStatus.Waiting;
-    }
+    const status = data.status === MonitorStatus.Enabled ? MonitorStatus.Waiting : MonitorStatus.Disabled;
 
     const MonitorAlreadyExist = await this.monitorRepository.count({
       where: {

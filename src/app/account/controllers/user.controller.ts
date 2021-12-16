@@ -1,5 +1,6 @@
 import { BadRequestException, Body, Get, Ip, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
+import { DirectoryService } from 'src/app/monitor/services/directory.service';
 import * as UserAgentParser from 'ua-parser-js';
 
 import { BasicController } from '../../../common/basic/Basic.controller';
@@ -19,7 +20,12 @@ import { UserService } from '../services/user.service';
 
 @BasicController('user')
 export class UserController {
-  constructor(private userService: UserService, private teamService: TeamService, private authService: AuthService) {}
+  constructor(
+    private userService: UserService,
+    private teamService: TeamService,
+    private authService: AuthService,
+    // private directoryService: DirectoryService,
+  ) {}
 
   @UserRolePermission(Role.User, Role.Admin, Role.Owner)
   @StandardApi({ type: WhoAmIResDto })
@@ -41,6 +47,10 @@ export class UserController {
     }
 
     const defaultTeam = await this.teamService.createDefaultTeam(user);
+
+    // const defaultDirectory = await this.directoryService.createRootDirectory(user, defaultTeam);
+
+    // defaultTeam.directories = [defaultDirectory];
 
     user.teams = [defaultTeam];
 

@@ -10,6 +10,7 @@
     "nestjs",
     "pino",
     "szmarczak",
+    "typeorm",
     "uuidv"
   ]
 }

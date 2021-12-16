@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AccountModule } from '../account/account.module';
 
 import { SchedulerModule } from '../scheduler/scheduler.module';
 import { DirectoryController } from './controllers/directory.controller';
@@ -17,6 +18,6 @@ import { MonitorService } from './services/monitor.service';
   ],
   controllers: [DirectoryController, MonitorController],
   providers: [DirectoryService, MonitorService],
-  exports: [MonitorService],
+  exports: [MonitorService, DirectoryService],
 })
 export class MonitorModule {}

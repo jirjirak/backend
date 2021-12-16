@@ -129,19 +129,19 @@ export class SchedulerService {
     for (let monitor of monitors) {
       //
 
-      let expression = monitor.cronExpression;
+      let cronExpression = monitor.cronExpression;
 
       if (isEmpty(monitor.cronExpression)) {
-        expression = this.generateCronExpression(monitor.interval);
-        monitor = await this.monitorService.updateMonitorCron(monitor.id, expression);
+        cronExpression = this.generateCronExpression(monitor.interval);
+        monitor = await this.monitorService.updateMonitorCron(monitor.id, cronExpression);
       }
 
-      const jobExist = this.findJob(expression, monitor.type);
+      const jobExist = this.findJob(cronExpression, monitor.type);
 
       if (jobExist) {
-        this.addMonitorToJob(expression, monitor);
+        this.addMonitorToJob(cronExpression, monitor);
       } else {
-        this.addJob(expression, monitor);
+        this.addJob(cronExpression, monitor);
       }
 
       if (monitor.status !== MonitorStatus.Enabled) {

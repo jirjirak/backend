@@ -16,6 +16,7 @@ import { typeOrmCOnfig } from './config/typeorm.config';
 import { QueueModule } from './app/queue/queue.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BullConfig } from './config/bull.config';
+import { WorkerModule } from './app/worker/worker.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { BullConfig } from './config/bull.config';
     DataCenterModule,
     HeartbeatModule,
     QueueModule,
+    WorkerModule,
   ],
   controllers: [],
   providers: [],

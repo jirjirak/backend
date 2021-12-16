@@ -1,4 +1,4 @@
-
+import { User } from 'src/app/account/entities/user.entity';
 import { InjectableService } from '../../../common/decorators/common.decorator';
 import { ListToTree } from '../../../common/functions/list-to-tree.func';
 import { Team } from '../../account/entities/team.entity';
@@ -14,32 +14,38 @@ export class DirectoryService {
     return !count;
   }
 
-  async create(team: Team, name: string, parent: Directory): Promise<Directory> {
+  async createRootDirectory(creator: User, team: Team): Promise<Directory> {
+    const directory = await this.directoryRepository.createAndSave({
+      team,
+      creator,
+      name: 'root',
+      isRootDirectory: true,
+    });
+
+    return directory;
+  }
+
+  async create(team: Team, creator: User, name: string, parent: Directory): Promise<Directory> {
     const directory = await this.directoryRepository.createAndSave({
       team,
       name,
+      creator,
       parent,
     });
 
     return directory;
   }
 
-  async list(): Promise<Directory[]> {
-    // const directories = await this.directoryRepository.find({
-    //   where: { team: 7 },
-    //   relations: ['monitors', 'monitors.permissions', 'permissions'],
-    //   loadRelationIds: { relations: ['parent'] },
-    // });
-
+  async list(teamId: number, userId: number): Promise<Directory[]> {
     let directories = await this.directoryRepository
       .createQueryBuilder('directory')
-      .where('directory.team = :team', { team: 7 })
+      .where('directory.team = :team', { team: teamId })
       .leftJoinAndSelect('directory.monitors', 'monitor')
       .leftJoinAndSelect('monitor.permissions', 'monitorPermission', 'monitorPermission.user = :userId', {
-        userId: 7,
+        userId,
       })
       .leftJoinAndSelect('directory.permissions', 'directoryPermission', 'directoryPermission.user = :userId', {
-        userId: 7,
+        userId,
       })
       .loadRelationIdAndMap('directory.parent', 'directory.parent')
       .getMany();

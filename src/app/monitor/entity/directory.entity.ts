@@ -1,3 +1,4 @@
+import { User } from 'src/app/account/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
@@ -24,6 +25,10 @@ export class Directory extends BasicEntity {
   @ManyToOne(() => Team, { nullable: false })
   @JoinColumn()
   team: Team;
+
+  @ManyToOne(() => User, { nullable: false })
+  @JoinColumn()
+  creator: User;
 
   @IsStringField()
   @Column()
