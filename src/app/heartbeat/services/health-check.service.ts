@@ -14,22 +14,18 @@ export class HealthCheckService {
   constructor(private httpHealthCheckService: HttpHealthCheckService, private queueService: QueueService) {}
 
   async healthCheck(monitors: Monitor[], jobTriggeredAt: Date): Promise<void> {
-    const type = monitors[0].type;
-
-    if (type === MonitorType.Http) {
-      await this.httpHealthCheckService.healthCheck(monitors, jobTriggeredAt);
-    }
+    const httpMonitors = monitors.filter((m) => m.type === MonitorType.Http);
+    await this.httpHealthCheckService.healthCheck(httpMonitors, jobTriggeredAt);
   }
 
   async saveHealthCheckResult(data: Event): Promise<Event> {
-    // get monitor here
+    const { type } = data.monitor;
+    let result: Event;
 
-    return await this.httpHealthCheckService.saveHttpHealthCheckResult(data);
+    if (type === MonitorType.Http) {
+      result = await this.httpHealthCheckService.saveHttpHealthCheckResult(data);
+    }
+
+    return result;
   }
-
-  // async checkEventIsOK(event: Event): Promise<boolean> {
-  //   if (event.monitor.type === MonitorType.Http) {
-  //     return await this.httpHealthCheckService.httpHealthCheckResultIsOk(event.monitor, event);
-  //   }
-  // }
 }
