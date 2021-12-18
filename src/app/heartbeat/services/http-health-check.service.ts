@@ -5,7 +5,6 @@ import { Monitor } from '../../monitor/entity/monitor.entity';
 import { Queues } from '../../queue/queue.module';
 import { QueueService } from '../../queue/services/queue.service';
 import { HttpTiming } from '../interfaces/http.interface';
-import * as http from 'http';
 import * as https from 'https';
 import { EventService } from '../../event/services/event.service';
 import { Event } from '../../event/entities/event.entity';

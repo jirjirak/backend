@@ -1,4 +1,3 @@
-
 import { IsBooleanField, IsPrimaryKeyField } from '../../../../common/decorators/common.decorator';
 import { Team } from '../../../account/entities/team.entity';
 import { User } from '../../../account/entities/user.entity';

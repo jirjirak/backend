@@ -1,6 +1,5 @@
 import { BadRequestException, Body, Get, Ip, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
-import { DirectoryService } from 'src/app/monitor/services/directory.service';
 import * as UserAgentParser from 'ua-parser-js';
 
 import { BasicController } from '../../../common/basic/Basic.controller';
@@ -23,8 +22,7 @@ export class UserController {
   constructor(
     private userService: UserService,
     private teamService: TeamService,
-    private authService: AuthService,
-    // private directoryService: DirectoryService,
+    private authService: AuthService, // private directoryService: DirectoryService,
   ) {}
 
   @UserRolePermission(Role.User, Role.Admin, Role.Owner)

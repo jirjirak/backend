@@ -1,5 +1,4 @@
 import { Global, Module } from '@nestjs/common';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { MonitorModule } from '../app/monitor/monitor.module';
 import { SchedulerModule } from '../app/scheduler/scheduler.module';

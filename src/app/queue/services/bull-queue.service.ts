@@ -1,5 +1,5 @@
 import { InjectQueue } from '@nestjs/bull';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { Queue } from 'bull';
 import { InjectableService } from '../../../common/decorators/common.decorator';
 import { Queues } from '../queue.module';

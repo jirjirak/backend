@@ -1,6 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AccountModule } from '../account/account.module';
 
 import { SchedulerModule } from '../scheduler/scheduler.module';
 import { DirectoryController } from './controllers/directory.controller';

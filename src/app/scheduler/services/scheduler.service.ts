@@ -1,16 +1,13 @@
 import { Logger } from '@nestjs/common';
 import { isEmpty } from 'class-validator';
-import { CronJob } from 'cron';
 import { WorkerService } from 'src/app/worker/services/worker.service';
-import { architecture, isMonolithArchitecture, isWorkerMode } from 'src/config/app.config';
+import { isMonolithArchitecture } from 'src/config/app.config';
 
 import { InjectableService } from '../../../common/decorators/common.decorator';
 import { UtilsService } from '../../../common/service/utils.service';
-import { HealthCheckService } from '../../heartbeat/services/health-check.service';
 import { Monitor } from '../../monitor/entity/monitor.entity';
-import { MonitorStatus, MonitorType } from '../../monitor/enum/monitor.enum';
+import { MonitorStatus } from '../../monitor/enum/monitor.enum';
 import { MonitorService } from '../../monitor/services/monitor.service';
-import { JobStorage } from '../interface/scheduler.interface';
 
 @InjectableService()
 export class SchedulerService {
