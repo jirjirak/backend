@@ -63,7 +63,7 @@ export class BootstrapService {
         break;
       }
 
-      await this.schedulerService.ProcessMonitors(monitors);
+      await this.schedulerService.assignWorkerToMonitor(monitors);
 
       currentPage += 1;
     }

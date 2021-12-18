@@ -34,7 +34,7 @@ export class Monitor extends BasicEntity {
   @Column({ default: false })
   flipStatus: boolean;
 
-  @Column({ default: 1 })
+  @Column({ default: 0 })
   errorTolerance: number;
 
   @Column({ nullable: true })
@@ -45,6 +45,9 @@ export class Monitor extends BasicEntity {
 
   @Column({ default: 5000 })
   expectedResponseTime: number;
+
+  @Column({ default: false })
+  useLocalWorker: boolean;
 
   // http fields
   @Column({ nullable: true })

@@ -60,6 +60,10 @@ export class MonitorService {
     return await this.monitorRepository.updateById(monitorId, { cronExpression });
   }
 
+  async updateMonitorLocalWorker(monitorId: number, useLocalWorker: boolean): Promise<Monitor> {
+    return await this.monitorRepository.updateById(monitorId, { useLocalWorker });
+  }
+
   async updateMonitorStatus(monitorId: number, status: MonitorStatus): Promise<Monitor> {
     return await this.monitorRepository.updateById(monitorId, { status });
   }

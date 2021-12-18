@@ -1,4 +1,5 @@
 import { Body, Post } from '@nestjs/common';
+import { AsyncStdRes } from 'src/common/types/standard-res.type';
 
 import { BasicController } from '../../../common/basic/Basic.controller';
 import { GetUser } from '../../../common/decorators/get-user.decorator';
@@ -8,6 +9,7 @@ import { User } from '../../account/entities/user.entity';
 import { Role } from '../../auth/enum/role.enum';
 import { SchedulerService } from '../../scheduler/services/scheduler.service';
 import { CreateMonitorBodyDto } from '../dto/monitor/create-monitor.dto';
+import { Monitor } from '../entity/monitor.entity';
 import { MonitorStatus } from '../enum/monitor.enum';
 import { MonitorService } from '../services/monitor.service';
 
@@ -19,11 +21,11 @@ export class MonitorController {
   @UserRolePermission(Role.Admin, Role.User)
   @StandardApi()
   @Post('add')
-  async create(@GetUser() user: User, @Body() body: CreateMonitorBodyDto) {
+  async create(@GetUser() user: User, @Body() body: CreateMonitorBodyDto): AsyncStdRes<Monitor> {
     const monitor = await this.monitorService.createMonitor(user, body);
 
     if (monitor.status === MonitorStatus.Waiting) {
-      this.schedulerService.ProcessMonitors([monitor]);
+      this.schedulerService.assignWorkerToMonitor([monitor]);
     }
 
     return monitor;

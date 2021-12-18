@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
+import { MonitorModule } from '../monitor/monitor.module';
 
 import { WorkerModule } from '../worker/worker.module';
 import { SchedulerService } from './services/scheduler.service';
 
 @Module({
-  imports: [WorkerModule],
+  imports: [WorkerModule, forwardRef(() => MonitorModule)],
   providers: [SchedulerService],
   exports: [SchedulerService],
 })
