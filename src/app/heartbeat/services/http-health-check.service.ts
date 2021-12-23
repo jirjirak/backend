@@ -2,18 +2,17 @@ import { Logger } from '@nestjs/common';
 import { lookup } from 'dns';
 import { InjectableService } from '../../../common/decorators/common.decorator';
 import { Monitor } from '../../monitor/entity/monitor.entity';
-import { Queues } from '../../queue/queue.module';
-import { QueueService } from '../../queue/services/queue.service';
 import { HttpTiming } from '../interfaces/http.interface';
 import * as https from 'https';
 import { EventService } from '../../event/services/event.service';
 import { Event } from '../../event/entities/event.entity';
+import { TransmitterService } from 'src/app/transmitter/services/transmitter.service';
 
 @InjectableService()
 export class HttpHealthCheckService {
   logger = new Logger();
 
-  constructor(private queueService: QueueService, private eventService: EventService) {}
+  constructor(private transmitterService: TransmitterService, private eventService: EventService) {}
 
   private getDuration(t1: number, t2: number): number {
     return t2 - t1;
@@ -116,7 +115,7 @@ export class HttpHealthCheckService {
       errorCode: error?.['code'],
     };
 
-    await this.queueService.sendEvent(Queues.Events, data);
+    await this.transmitterService.sendEvent(data as any);
   }
 
   private checkStatusCode(monitor: Monitor, event: Event): boolean {

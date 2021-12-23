@@ -19,7 +19,7 @@ export class SchedulerService {
     private monitorService: MonitorService,
   ) {}
 
-  generateCronExpression(interval: number): string {
+  private generateCronExpression(interval: number): string {
     // convert to second
     interval /= 1000;
 
@@ -31,7 +31,7 @@ export class SchedulerService {
     return `${randomNumber}/${interval} * * * * *`;
   }
 
-  async assignCronExpressionToMonitor(monitor: Monitor): Promise<Monitor> {
+  private async assignCronExpressionToMonitor(monitor: Monitor): Promise<Monitor> {
     let cronExpression = monitor.cronExpression;
 
     if (isEmpty(monitor.cronExpression)) {
@@ -41,6 +41,10 @@ export class SchedulerService {
     }
 
     return monitor;
+  }
+
+  async workerIsAvailable(workerId: number) {
+    // return this.
   }
 
   async assignLocalWorkerToMonitor(monitors: Monitor[]): Promise<void> {

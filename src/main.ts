@@ -16,6 +16,7 @@ import './app/scheduler/services/scheduler.service';
 import { BootstrapService } from './common/service/bootstrap.service';
 import { setupSwagger } from './plugin/swagger.plugin';
 import { PORT } from './config/app.config';
+import { SocketClientService } from './app/transmitter/services/socket-client.service';
 
 const logger = new Logger('main');
 
@@ -55,6 +56,10 @@ async function bootstrap(): Promise<void> {
   });
 
   const bootstrapService = app.get<BootstrapService>(BootstrapService);
+
+  const socketClientService = app.get<SocketClientService>(SocketClientService);
+
+  socketClientService.init();
 
   await bootstrapService.initBefore();
 

@@ -6,6 +6,7 @@ import { Monitor } from 'src/app/monitor/entity/monitor.entity';
 import { JobStorage } from 'src/app/scheduler/interface/scheduler.interface';
 import { InjectableService } from 'src/common/decorators/common.decorator';
 import { UtilsService } from 'src/common/service/utils.service';
+import { WorkerRepository } from '../repositories/worker.repository';
 
 @InjectableService()
 export class WorkerService {

@@ -11,7 +11,7 @@ import { Event } from '../../event/entities/event.entity';
 export class HealthCheckService {
   logger = new Logger();
 
-  constructor(private httpHealthCheckService: HttpHealthCheckService, private queueService: QueueService) {}
+  constructor(private httpHealthCheckService: HttpHealthCheckService) {}
 
   async healthCheck(monitors: Monitor[], jobTriggeredAt: Date): Promise<void> {
     const httpMonitors = monitors.filter((m) => m.type === MonitorType.Http);

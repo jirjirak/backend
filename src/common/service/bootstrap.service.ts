@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { isEmpty } from 'class-validator';
 import { writeFileSync } from 'fs';
+import { TransmitterService } from 'src/app/transmitter/services/transmitter.service';
 
 import { Monitor } from '../../app/monitor/entity/monitor.entity';
 import { MonitorService } from '../../app/monitor/services/monitor.service';
@@ -18,6 +19,7 @@ export class BootstrapService {
     private monitorService: MonitorService,
     private schedulerService: SchedulerService,
     private redisService: RedisService,
+    private transmitterService: TransmitterService,
   ) {}
 
   async generateSecreteKey(): Promise<void> {
@@ -73,6 +75,7 @@ export class BootstrapService {
 
   async initBefore(): Promise<void> {
     await this.initializeService();
+
 
     // load monitors
     // await this.loadMonitors();
