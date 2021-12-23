@@ -20,6 +20,8 @@ import { WorkerModule } from './app/worker/worker.module';
 import { MessengerModule } from './app/messenger/messenger.module';
 import { TransmitterModule } from './app/transmitter/transmitter.module';
 import { AlertModule } from './app/alert/alert.module';
+import { DeterminerModule } from './app/determiner/determiner.module';
+import { MemdbModule } from './app/memdb/memdb.module';
 
 @Module({
   imports: [
@@ -51,6 +53,8 @@ import { AlertModule } from './app/alert/alert.module';
     MessengerModule,
     TransmitterModule,
     AlertModule,
+    MemdbModule,
+    DeterminerModule,
   ],
   controllers: [],
   providers: [],
