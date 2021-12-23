@@ -17,6 +17,9 @@ import { QueueModule } from './app/queue/queue.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BullConfig } from './config/bull.config';
 import { WorkerModule } from './app/worker/worker.module';
+import { MessengerModule } from './app/messenger/messenger.module';
+import { TransmitterModule } from './app/transmitter/transmitter.module';
+import { AlertModule } from './app/alert/alert.module';
 
 @Module({
   imports: [
@@ -45,6 +48,9 @@ import { WorkerModule } from './app/worker/worker.module';
     HeartbeatModule,
     QueueModule,
     WorkerModule,
+    MessengerModule,
+    TransmitterModule,
+    AlertModule,
   ],
   controllers: [],
   providers: [],
