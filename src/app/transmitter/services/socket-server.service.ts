@@ -25,7 +25,10 @@ export class SocketServerService implements OnGatewayInit, OnGatewayConnection, 
 
   @SubscribeMessage('events')
   async handleEvent(@MessageBody() data: any): Promise<any> {
+    // TODO: change log message
+    this.logger.verbose(`Received event`);
     await this.queueService.sendEvent(Queues.Events, data);
+    this.logger.verbose(`Event sent to queue: ${Queues.Events}`);
     return true;
   }
 

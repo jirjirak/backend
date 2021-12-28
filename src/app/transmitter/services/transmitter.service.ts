@@ -15,14 +15,18 @@ export class TransmitterService {
     const transmitterStrategy = this.determinerService.transmitterStrategy();
     let ack: boolean;
 
+    this.logger.verbose(`Sending event to controller`);
+
     if (transmitterStrategy === TransmitterStrategy.Socket) {
       ack = await this.socketService.sendEvent(event);
+    } else {
+      throw new Error('Transmitter strategy not supported');
     }
 
     if (ack) {
-      this.logger.log(`Event sent`);
+      this.logger.verbose(`Event sent to controller`);
     } else {
-      this.logger.error(`Event not sent`);
+      this.logger.verbose(`Event not sent to controller`);
     }
 
     return ack;

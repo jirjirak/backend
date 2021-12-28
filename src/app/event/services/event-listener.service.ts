@@ -8,17 +8,20 @@ import { Queues } from '../../queue/queue.module';
 @Processor(Queues.Events)
 @InjectableService()
 export class EventListenerService {
-  logger = new Logger();
+  logger = new Logger('EventListenerService');
 
   constructor(private healthCheckService: HealthCheckService) {}
 
   @Process({ concurrency: 1 })
-  async process(job: any, done: DoneCallback): Promise<void> {
+  async evetnProcessor(job: any, done: DoneCallback): Promise<void> {
+    this.logger.verbose(`Processing event: ${job.id}`);
+
     try {
       await this.healthCheckService.saveHealthCheckResult(job.data);
-      this.logger.debug(job.id);
+      this.logger.verbose(`Event processed: ${job.id}`);
       done();
     } catch (error) {
+      this.logger.error(`Error processing event: ${job.id}`);
       done(new Error(error));
     }
   }

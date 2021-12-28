@@ -2,7 +2,6 @@ import { Logger } from '@nestjs/common';
 
 import { InjectableService } from '../../../common/decorators/common.decorator';
 import { Monitor } from '../../monitor/entity/monitor.entity';
-import { QueueService } from '../../queue/services/queue.service';
 import { MonitorType } from '../../monitor/enum/monitor.enum';
 import { HttpHealthCheckService } from './http-health-check.service';
 import { Event } from '../../event/entities/event.entity';
