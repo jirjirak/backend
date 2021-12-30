@@ -41,7 +41,7 @@ export class MonitorService {
   }
 
   async deleteMonitor(monitorId: number): Promise<boolean> {
-    const monitor = await this.monitorRepository.findOne(monitorId);
+    const monitor = await this.monitorRepository.findOne({ where: { id: monitorId } });
 
     await this.schedulerService.removeWorkerFromMonitor(monitor);
 

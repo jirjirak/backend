@@ -13,12 +13,13 @@ import { Socket } from 'socket.io-client';
 import { Server } from 'socket.io';
 import { QueueService } from 'src/app/queue/services/queue.service';
 import { Queues } from 'src/app/queue/queue.module';
+import { SchedulerService } from 'src/app/scheduler/services/scheduler.service';
 
 @WebSocketGateway(5050)
 export class SocketServerService implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   logger = new Logger('SocketServerService');
 
-  constructor(private queueService: QueueService) {}
+  constructor(private queueService: QueueService, private schedulerService: SchedulerService) {}
 
   @WebSocketServer()
   server: Server;
@@ -37,6 +38,7 @@ export class SocketServerService implements OnGatewayInit, OnGatewayConnection, 
   }
 
   handleConnection(client: Socket): void {
+    // this.schedulerService.workerIsAvailable()
     this.logger.log(`client connected: ${client.id}`);
   }
 

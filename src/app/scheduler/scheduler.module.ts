@@ -5,7 +5,7 @@ import { WorkerModule } from '../worker/worker.module';
 import { SchedulerService } from './services/scheduler.service';
 
 @Module({
-  imports: [WorkerModule, forwardRef(() => MonitorModule)],
+  imports: [forwardRef(() => WorkerModule), forwardRef(() => MonitorModule)],
   providers: [SchedulerService],
   exports: [SchedulerService],
 })

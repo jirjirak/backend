@@ -26,10 +26,10 @@ interface SQB<Entity> extends SelectQueryBuilder<Entity> {
 
 interface CustomFindOneOptions<Entity> extends FindOneOptions<Entity> {
   where?:
+    | string
     | FindConditions<Entity>[]
     | FindConditions<Entity>
     | ObjectLiteral
-    | string
     | ((qb: SelectQueryBuilder<Entity>) => any);
 }
 
@@ -139,7 +139,7 @@ export class BasicRepository<Entity> extends Repository<Entity> {
     if (!returnData) {
       return;
     }
-    const record = await this.findOne(id, {
+    const record = await this.findOne(id as any, {
       relations: options?.relations || [],
     });
 
@@ -178,12 +178,12 @@ export class BasicRepository<Entity> extends Repository<Entity> {
   }
 
   async findOne(
-    optionsOrConditions?: FindOneType<Entity> | any,
-    maybeOptions?: FindOneOptionsType<Entity> | any,
+    conditions?: FindOneType<Entity> | string | number | Date | ObjectID,
+    options?: FindOneOptionsType<Entity>,
   ): Promise<Entity> {
     this.logPerformanceStart();
 
-    const result = await super.findOne(optionsOrConditions as any, maybeOptions);
+    const result = await super.findOne(conditions as any, options);
 
     this.logPerformanceEnd();
     return result;

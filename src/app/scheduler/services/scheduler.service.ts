@@ -1,5 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { isEmpty } from 'class-validator';
+import { WorkerStatus } from 'src/app/worker/enum/worker.enum';
+import { ManageWorkerService } from 'src/app/worker/services/manage-worker.service';
 import { WorkerService } from 'src/app/worker/services/worker.service';
 import { isMonolithArchitecture } from 'src/config/app.config';
 
@@ -15,6 +17,7 @@ export class SchedulerService {
 
   constructor(
     private workerService: WorkerService,
+    private manageWorkerService: ManageWorkerService,
     private utilsService: UtilsService,
     private monitorService: MonitorService,
   ) {}
@@ -43,9 +46,37 @@ export class SchedulerService {
     return monitor;
   }
 
-  // async workerIsAvailable(uuid: string) {
+  async workerIsAvailable(uuid: string): Promise<void> {
+    if (isMonolithArchitecture) {
+      return;
+    }
 
-  // }
+    const worker = await this.manageWorkerService.findWorkerByUUID(uuid);
+
+    if (!worker) {
+      throw new Error('Worker not found');
+    }
+
+    if (worker.status !== WorkerStatus.Active) {
+      await this.manageWorkerService.updateWorkerStatus(worker.id, WorkerStatus.Active);
+    }
+  }
+
+  async workerIsNotAvailable(uuid: string): Promise<void> {
+    if (isMonolithArchitecture) {
+      return;
+    }
+
+    const worker = await this.manageWorkerService.findWorkerByUUID(uuid);
+
+    if (!worker) {
+      throw new Error('Worker not found');
+    }
+
+    if (worker.status !== WorkerStatus.Inactive) {
+      await this.manageWorkerService.updateWorkerStatus(worker.id, WorkerStatus.Inactive);
+    }
+  }
 
   private async removeLocalWorkerFromMonitor(monitor: Monitor): Promise<boolean> {
     const { cronExpression, id } = monitor;

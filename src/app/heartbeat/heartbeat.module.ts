@@ -7,7 +7,7 @@ import { HealthCheckService } from './services/health-check.service';
 import { HttpHealthCheckService } from './services/http-health-check.service';
 
 @Module({
-  imports: [TransmitterModule, forwardRef(() => EventModule)],
+  imports: [forwardRef(() => TransmitterModule), forwardRef(() => EventModule)],
   providers: [HealthCheckService, HttpHealthCheckService],
   exports: [HealthCheckService],
 })
