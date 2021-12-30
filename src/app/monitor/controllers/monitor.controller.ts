@@ -1,4 +1,4 @@
-import { Body, Post } from '@nestjs/common';
+import { Body, Delete, Param, Post } from '@nestjs/common';
 import { AsyncStdRes } from 'src/common/types/standard-res.type';
 
 import { BasicController } from '../../../common/basic/Basic.controller';
@@ -9,6 +9,7 @@ import { User } from '../../account/entities/user.entity';
 import { Role } from '../../auth/enum/role.enum';
 import { SchedulerService } from '../../scheduler/services/scheduler.service';
 import { CreateMonitorBodyDto } from '../dto/monitor/create-monitor.dto';
+import { DeleteMonitorResDto } from '../dto/monitor/delete-monitor.dto';
 import { Monitor } from '../entity/monitor.entity';
 import { MonitorStatus } from '../enum/monitor.enum';
 import { MonitorService } from '../services/monitor.service';
@@ -29,5 +30,13 @@ export class MonitorController {
     }
 
     return monitor;
+  }
+
+  @StandardApi({ type: DeleteMonitorResDto })
+  // @UserRolePermission(Role.User)
+  @Delete(':monitorId')
+  async delete(@Param('monitorId') monitoId: number): AsyncStdRes<DeleteMonitorResDto> {
+    await this.monitorService.deleteMonitor(monitoId);
+    return { sucess: true };
   }
 }

@@ -1,4 +1,5 @@
-import { Logger } from '@nestjs/common';
+import { forwardRef, Inject, Logger } from '@nestjs/common';
+import { SchedulerService } from 'src/app/scheduler/services/scheduler.service';
 import { In } from 'typeorm';
 
 import { InjectableService } from '../../../common/decorators/common.decorator';
@@ -12,9 +13,12 @@ import { MonitorRepository } from '../repositories/monitor.repository';
 export class MonitorService {
   logger = new Logger('Monitor');
 
-  constructor(private monitorRepository: MonitorRepository) {}
+  constructor(
+    @Inject(forwardRef(() => SchedulerService)) private schedulerService: SchedulerService,
+    private monitorRepository: MonitorRepository,
+  ) {}
 
-  async createMonitor(user: User, data: CreateMonitorBodyDto): Promise<Monitor> {
+  async createMonitor(creator: User, data: CreateMonitorBodyDto): Promise<Monitor> {
     const { address, directory, type } = data;
 
     const status = data.status === MonitorStatus.Enabled ? MonitorStatus.Waiting : MonitorStatus.Disabled;
@@ -31,9 +35,19 @@ export class MonitorService {
       throw new Error('Monitor already exist');
     }
 
-    const monitor = await this.monitorRepository.createAndSave({ ...data, creator: user, status });
+    const monitor = await this.monitorRepository.createAndSave({ ...data, creator, status });
 
     return monitor;
+  }
+
+  async deleteMonitor(monitorId: number): Promise<boolean> {
+    const monitor = await this.monitorRepository.findOne(monitorId);
+
+    await this.schedulerService.removeWorkerFromMonitor(monitor);
+
+    await this.monitorRepository.softDelete(monitorId);
+
+    return true;
   }
 
   async countMonitors(): Promise<number> {

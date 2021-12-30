@@ -6,10 +6,10 @@ import { RolePermissionMetDataKey } from '../../app/auth/config/role-permission.
 import { Role } from '../../app/auth/enum/role.enum';
 import { RolePermissionGuard } from '../../app/auth/guard/permission.guard';
 
-export const UserRolePermission = (...roles: Role[]) => {
+export const UserRolePermission = (...roles: Role[]): MethodDecorator => {
   return applyDecorators(
     ApiBearerAuth(),
-    SetMetadata(RolePermissionMetDataKey, [...roles, Role.Owner]),
+    SetMetadata(RolePermissionMetDataKey, [...roles, Role.Owner, Role.Admin]),
     UseGuards(AuthGuard('jwt'), RolePermissionGuard),
   );
 };

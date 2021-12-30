@@ -18,7 +18,7 @@ export class Worker extends BasicEntity {
   @Column({ default: 100000 })
   requestPerSecond: number;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', unique: true })
   uuid: string;
 
   @ManyToOne(() => DataCenter, { nullable: false })

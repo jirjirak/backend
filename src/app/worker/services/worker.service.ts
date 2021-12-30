@@ -48,7 +48,7 @@ export class WorkerService {
     }
   }
 
-  addJob(expression: string): boolean {
+  private addJob(expression: string): boolean {
     const cron = this.createCronJob(expression);
 
     const jobStorage: JobStorage = {

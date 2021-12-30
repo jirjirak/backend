@@ -114,6 +114,7 @@ function defineDecorators(params: StandardApiInterface = {}, target, propertyKey
 }
 
 export function StandardApi(params?: StandardApiInterface) {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return (target: any, propertyKey: string, descriptor: any) => {
     const decorators = defineDecorators(params, target, propertyKey, descriptor);
     for (const decorator of decorators) {

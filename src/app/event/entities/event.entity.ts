@@ -9,6 +9,9 @@ export class Event extends BasicEntity {
   @JoinColumn()
   monitor: Monitor;
 
+  @Column({ type: 'uuid', unique: true })
+  uuid: string;
+
   @Column()
   triggeredAt: Date;
 

@@ -13,5 +13,5 @@ export class PermissionService {
     return permission;
   }
 
-  async setTeamPermission(teamId: number, userId: number) {}
+  // async setTeamPermission(teamId: number, userId: number) {}
 }

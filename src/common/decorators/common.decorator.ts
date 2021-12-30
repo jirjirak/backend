@@ -79,7 +79,7 @@ export function IsPrimaryField(params?: {
 
 export function IsReferenceField(params?: { type?: any; isArray?: boolean; required?: boolean }) {
   return function (target: any, propertyKey: string): void {
-    const { isArray, type, propertyType } = getPropMetaData(params, target, propertyKey);
+    const { isArray, type } = getPropMetaData(params, target, propertyKey);
 
     ApiProperty({ type, isArray })(target, propertyKey);
     Type(() => type)(target, propertyKey);
@@ -129,6 +129,7 @@ export function IsRegExpField(pattern: RegExp, params?: { type?: any; isArray?: 
 }
 
 export function IsNumberField(params?: { type?: any; isArray?: boolean; required?: boolean }) {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return function (target: any, propertyKey: string) {
     params ||= {};
     const { isArray } = getPropMetaData(params, target, propertyKey);
@@ -146,6 +147,7 @@ export function IsNumberField(params?: { type?: any; isArray?: boolean; required
 }
 
 export function IsBooleanField(params?: { type?: any; isArray?: boolean; required?: boolean }) {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return function (target: any, propertyKey: string) {
     params ||= {};
     const { isArray } = getPropMetaData(params, target, propertyKey);
@@ -162,6 +164,7 @@ export function IsBooleanField(params?: { type?: any; isArray?: boolean; require
 }
 
 export function IsDateField(params?: { type?: any; isArray?: boolean; required?: boolean }) {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return function (target: any, propertyKey: string) {
     params ||= {};
     const { isArray } = getPropMetaData(params, target, propertyKey);

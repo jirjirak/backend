@@ -11,7 +11,7 @@ import { MonitorService } from '../../monitor/services/monitor.service';
 
 @InjectableService()
 export class SchedulerService {
-  logger = new Logger('Scheduler');
+  logger = new Logger('SchedulerService');
 
   constructor(
     private workerService: WorkerService,
@@ -43,11 +43,25 @@ export class SchedulerService {
     return monitor;
   }
 
-  async workerIsAvailable(workerId: number) {
-    // return this.
+  // async workerIsAvailable(uuid: string) {
+
+  // }
+
+  private async removeLocalWorkerFromMonitor(monitor: Monitor): Promise<boolean> {
+    const { cronExpression, id } = monitor;
+    const status = this.workerService.removeMonitorFromJob(cronExpression, id);
+    return status;
   }
 
-  async assignLocalWorkerToMonitor(monitors: Monitor[]): Promise<void> {
+  async removeWorkerFromMonitor(monitor: Monitor): Promise<boolean> {
+    if (isMonolithArchitecture) {
+      return await this.removeLocalWorkerFromMonitor(monitor);
+    } else {
+      // do stuff
+    }
+  }
+
+  async assignLocalWorkerToMonitors(monitors: Monitor[]): Promise<void> {
     for (let monitor of monitors) {
       if (monitor.useLocalWorker !== true) {
         monitor = await this.monitorService.updateMonitorLocalWorker(monitor.id, true);
@@ -65,7 +79,7 @@ export class SchedulerService {
 
   async assignWorkerToMonitor(monitors: Monitor[]): Promise<void> {
     if (isMonolithArchitecture) {
-      await this.assignLocalWorkerToMonitor(monitors);
+      await this.assignLocalWorkerToMonitors(monitors);
     } else {
       // do stuff
     }
