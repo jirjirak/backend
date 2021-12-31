@@ -7,7 +7,7 @@ import * as https from 'https';
 import { EventService } from '../../event/services/event.service';
 import { Event } from '../../event/entities/event.entity';
 import { TransmitterService } from 'src/app/transmitter/services/transmitter.service';
-
+import { v4 as uuid4 } from 'uuid';
 @InjectableService()
 export class HttpHealthCheckService {
   logger = new Logger();
@@ -108,6 +108,7 @@ export class HttpHealthCheckService {
       startAt: new Date(startAt),
       endAt: new Date(endAt),
       dnsLookup,
+      uuid: uuid4(),
       tcpConnection,
       tlsHandshake,
       firstByte,
