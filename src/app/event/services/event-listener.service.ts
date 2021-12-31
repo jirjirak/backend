@@ -14,14 +14,14 @@ export class EventListenerService {
 
   @Process({ concurrency: 1 })
   async evetnProcessor(job: any, done: DoneCallback): Promise<void> {
-    this.logger.verbose(`Processing event: ${job.id}`);
+    this.logger.verbose(`Processing event: ${job.data.uuid}`);
 
     try {
       await this.healthCheckService.saveHealthCheckResult(job.data);
-      this.logger.verbose(`Event processed: ${job.id}`);
+      this.logger.verbose(`Event processed: ${job.data.uuid}`);
       done();
     } catch (error) {
-      this.logger.error(`Error processing event: ${job.id}`);
+      this.logger.error(`Error processing event: ${job.data.uuid}`);
       done(new Error(error));
     }
   }

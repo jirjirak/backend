@@ -15,7 +15,7 @@ export class TransmitterService {
     const transmitterStrategy = this.determinerService.transmitterStrategy();
     let ack: boolean;
 
-    this.logger.verbose(`Sending event to controller`);
+    this.logger.verbose(`Sending event to controller ${event.uuid}`);
 
     if (transmitterStrategy === TransmitterStrategy.Socket) {
       ack = await this.socketService.sendEvent(event);
@@ -24,9 +24,9 @@ export class TransmitterService {
     }
 
     if (ack) {
-      this.logger.verbose(`Event sent to controller`);
+      this.logger.verbose(`Event sent to controller: ${event.uuid}`);
     } else {
-      this.logger.verbose(`Event not sent to controller`);
+      this.logger.verbose(`Event not sent to controller: ${event.uuid}`);
     }
 
     return ack;
