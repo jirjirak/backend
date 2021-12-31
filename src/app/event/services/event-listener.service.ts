@@ -13,7 +13,7 @@ export class EventListenerService {
   constructor(private healthCheckService: HealthCheckService) {}
 
   @Process({ concurrency: 1 })
-  async evetnProcessor(job: any, done: DoneCallback): Promise<void> {
+  async eventProcessor(job: any, done: DoneCallback): Promise<void> {
     this.logger.verbose(`Processing event: ${job.data.uuid}`);
 
     try {
