@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 // import {} from '@nestjs/websockets';
 import {
+  GatewayMetadata,
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -14,8 +15,20 @@ import { Server } from 'socket.io';
 import { QueueService } from 'src/app/queue/services/queue.service';
 import { Queues } from 'src/app/queue/queue.module';
 import { SchedulerService } from 'src/app/scheduler/services/scheduler.service';
+import { isControllerMode, isMonolithArchitecture } from 'src/config/app.config';
 
-@WebSocketGateway(5050)
+export function SetupWebSocketServer<T extends Record<string, any> = GatewayMetadata>(
+  port?: number,
+  options?: T,
+): ClassDecorator {
+  return (target: any): any => {
+    if (isMonolithArchitecture || isControllerMode) {
+      WebSocketGateway(port, options)(target);
+    }
+  };
+}
+
+@SetupWebSocketServer(5050)
 export class SocketServerService implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   logger = new Logger('SocketServerService');
 
@@ -34,7 +47,7 @@ export class SocketServerService implements OnGatewayInit, OnGatewayConnection, 
   }
 
   afterInit(): void {
-    this.logger.log('Socket.io Server Initilized');
+    this.logger.log('Socket.io Server Initialized');
   }
 
   handleConnection(client: Socket): void {

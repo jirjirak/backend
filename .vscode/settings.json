@@ -11,6 +11,7 @@
     "pino",
     "szmarczak",
     "typeorm",
-    "uuidv"
+    "uuidv",
+    "websockets"
   ]
 }
