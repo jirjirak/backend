@@ -4,9 +4,9 @@ export const NODE_ENV: NodeEnvType = (process.env.NODE_ENV as NodeEnvType) || 'd
 export const PORT = +process.env.PORT || 3000;
 
 // default is false
-export const isSchedulerMode = Boolean(process.env.IS_SCHEDULER_MODE);
-export const isControllerMode = Boolean(process.env.IS_CONTROLLER_MODE);
-export const isWorkerMode = Boolean(process.env.IS_WORKER_MODE);
+export let isSchedulerMode = Boolean(process.env.IS_SCHEDULER_MODE);
+export let isControllerMode = Boolean(process.env.IS_CONTROLLER_MODE);
+export let isWorkerMode = Boolean(process.env.IS_WORKER_MODE);
 
 export const architecture: 'monolith' | 'microservice' = (process.env.ARCHITECTURE as any) || 'monolith';
 
@@ -17,4 +17,7 @@ if (architecture === 'microservice') {
   isMicroserviceArchitecture = true;
 } else {
   isMonolithArchitecture = true;
+  isWorkerMode = true;
+  isControllerMode = true;
+  isSchedulerMode = true;
 }
