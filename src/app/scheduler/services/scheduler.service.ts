@@ -1,5 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { isEmpty } from 'class-validator';
+import { Worker } from 'src/app/worker/entities/worker.entity';
 import { WorkerStatus } from 'src/app/worker/enum/worker.enum';
 import { ManageWorkerService } from 'src/app/worker/services/manage-worker.service';
 import { WorkerService } from 'src/app/worker/services/worker.service';
@@ -46,10 +47,24 @@ export class SchedulerService {
     return monitor;
   }
 
-  async workerIsAvailable(uuid: string): Promise<void> {
-    if (isMonolithArchitecture) {
-      return;
+  async findWorkerByUUID(uuid: string): Promise<Worker> {
+    return await this.manageWorkerService.findWorkerByUUID(uuid);
+  }
+
+  async isWorkerConnected(uuid: string): Promise<boolean> {
+    const worker = await this.manageWorkerService.findWorkerByUUID(uuid);
+
+    if (!worker) {
+      throw new Error('Worker not found');
     }
+
+    return worker.connected;
+  }
+
+  async workerConnected(uuid: string, identifier: string): Promise<void> {
+    // if (isMonolithArchitecture) {
+    //   return;
+    // }
 
     const worker = await this.manageWorkerService.findWorkerByUUID(uuid);
 
@@ -58,14 +73,14 @@ export class SchedulerService {
     }
 
     if (worker.status !== WorkerStatus.Active) {
-      await this.manageWorkerService.updateWorkerStatus(worker.id, WorkerStatus.Active);
+      await this.manageWorkerService.updateWorkerConnectionStatus(worker.id, { connected: true, identifier });
     }
   }
 
-  async workerIsNotAvailable(uuid: string): Promise<void> {
-    if (isMonolithArchitecture) {
-      return;
-    }
+  async workerDisconnected(uuid: string): Promise<void> {
+    // if (isMonolithArchitecture) {
+    //   return;
+    // }
 
     const worker = await this.manageWorkerService.findWorkerByUUID(uuid);
 
@@ -74,7 +89,7 @@ export class SchedulerService {
     }
 
     if (worker.status !== WorkerStatus.Inactive) {
-      await this.manageWorkerService.updateWorkerStatus(worker.id, WorkerStatus.Inactive);
+      await this.manageWorkerService.updateWorkerConnectionStatus(worker.id, { connected: false });
     }
   }
 

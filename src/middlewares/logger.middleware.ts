@@ -1,6 +1,5 @@
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import * as colors from 'colors';
 import { NODE_ENV } from 'src/config/app.config';
 
 @Injectable()

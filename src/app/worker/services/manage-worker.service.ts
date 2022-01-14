@@ -5,6 +5,10 @@ import { FindWorkersQueryDto } from '../dto/manage-worker.controller/find.dto';
 import { Worker } from '../entities/worker.entity';
 import { WorkerStatus } from '../enum/worker.enum';
 import { WorkerRepository } from '../repositories/worker.repository';
+import * as jwt from 'jsonwebtoken';
+import { v4 as uuid4 } from 'uuid';
+import { RegisterWorkerBodyDto } from '../dto/manage-worker.controller/register-worker.dto';
+import { User } from 'src/app/account/entities/user.entity';
 
 @InjectableService()
 export class ManageWorkerService {
@@ -19,6 +23,10 @@ export class ManageWorkerService {
 
   async updateWorkerStatus(id: number, status: WorkerStatus): Promise<Worker> {
     return await this.workerRepository.updateById(id, { status }, { relations: ['dataCenter'] });
+  }
+
+  async updateWorkerConnectionStatus(id: number, data: { connected?: boolean; identifier?: string }): Promise<Worker> {
+    return await this.workerRepository.updateById(id, data, { relations: ['dataCenter'] });
   }
 
   async findWorkers(query: FindWorkersQueryDto): Promise<[Worker[], number]> {
@@ -36,5 +44,27 @@ export class ManageWorkerService {
       limit: 10,
     });
     return [workers, total];
+  }
+
+  async registerWorker(user: User, data: RegisterWorkerBodyDto): Promise<Worker> {
+    const worker = await this.workerRepository.createAndSave({
+      ...data,
+      creator: user,
+      uuid: uuid4(),
+      status: WorkerStatus.Active,
+    });
+
+    return worker;
+  }
+
+  async createJwt(worker: Worker): Promise<string> {
+    return await new Promise((resolve, reject) => {
+      jwt.sign({ uuid: worker.uuid }, 'your-256-bit-secret', (err, token) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(token);
+      });
+    });
   }
 }
