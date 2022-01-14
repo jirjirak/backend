@@ -1,5 +1,5 @@
 import { BullModule } from '@nestjs/bull';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -22,6 +22,7 @@ import { TransmitterModule } from './app/transmitter/transmitter.module';
 import { AlertModule } from './app/alert/alert.module';
 import { DeterminerModule } from './app/determiner/determiner.module';
 import { MemdbModule } from './app/memdb/memdb.module';
+import { LoggerMiddleware } from './middlewares/logger.middleware';
 
 @Module({
   imports: [
@@ -59,4 +60,8 @@ import { MemdbModule } from './app/memdb/memdb.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

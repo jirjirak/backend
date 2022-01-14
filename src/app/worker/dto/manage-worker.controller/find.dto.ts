@@ -1,4 +1,3 @@
-import { IsEnum } from 'class-validator';
 import { IsEnumField, IsNumberField, IsStringField } from 'src/common/decorators/common.decorator';
 import { Worker } from '../../entities/worker.entity';
 import { WorkerStatus } from '../../enum/worker.enum';
