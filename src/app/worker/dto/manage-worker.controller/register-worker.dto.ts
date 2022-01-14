@@ -1,6 +1,5 @@
 import { DataCenter } from 'src/app/data-center/entities/data-center.entity';
 import { IsNumberField, IsPrimaryKeyField, IsStringField } from 'src/common/decorators/common.decorator';
-import { Worker } from '../../entities/worker.entity';
 
 export class RegisterWorkerBodyDto {
   @IsStringField()

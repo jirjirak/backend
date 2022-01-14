@@ -24,7 +24,7 @@ export class SocketClientService {
     const socket = io(config.fullUrl || `${config.useSsl ? 'https' : 'http'}://${config.host}:${config.connectPort}`, {
       auth: {
         token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiN2YyNzgzNzctMTY5Yi00ZDQ5LWEyNTMtZjBkOTlhZTg3Njg0IiwiaWF0IjoxNjQyMTY3OTc1fQ.Wi-Y7Y3ol797etN7ABuAvSJ5V5m0c2PLqRlLf4NHTJk',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMjA0MjIzMGEtZmQwMS00OWQ5LWJiYmMtM2MxMmRkN2QxZDJiIiwiaWF0IjoxNjQyMTg3NTM5fQ.AU2R5hAuLr0JcibiA-DZUgfZwBDD_ucFaxr4JrxUS2I',
       },
     });
 

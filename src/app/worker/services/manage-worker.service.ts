@@ -9,6 +9,7 @@ import * as jwt from 'jsonwebtoken';
 import { v4 as uuid4 } from 'uuid';
 import { RegisterWorkerBodyDto } from '../dto/manage-worker.controller/register-worker.dto';
 import { User } from 'src/app/account/entities/user.entity';
+import { SECRETE_KEY } from 'src/config/app.config';
 
 @InjectableService()
 export class ManageWorkerService {
@@ -26,7 +27,28 @@ export class ManageWorkerService {
   }
 
   async updateWorkerConnectionStatus(id: number, data: { connected?: boolean; identifier?: string }): Promise<Worker> {
-    return await this.workerRepository.updateById(id, data, { relations: ['dataCenter'] });
+    const { connected, identifier } = data;
+
+    return await this.workerRepository.updateById(
+      id,
+      {
+        connected,
+        identifier,
+        lastCheckIn: new Date(),
+        connectedAt: connected ? new Date() : null,
+        disconnectedAt: connected ? null : new Date(),
+      },
+      { relations: ['dataCenter'] },
+    );
+  }
+
+  async updateLastCheckIn(workerId: number): Promise<void> {
+    await this.workerRepository
+      .createQueryBuilder('worker')
+      .update()
+      .set({ lastCheckIn: new Date() })
+      .where({ id: workerId })
+      .execute();
   }
 
   async findWorkers(query: FindWorkersQueryDto): Promise<[Worker[], number]> {
@@ -59,7 +81,7 @@ export class ManageWorkerService {
 
   async createJwt(worker: Worker): Promise<string> {
     return await new Promise((resolve, reject) => {
-      jwt.sign({ uuid: worker.uuid }, 'your-256-bit-secret', (err, token) => {
+      jwt.sign({ uuid: worker.uuid }, SECRETE_KEY, (err, token) => {
         if (err) {
           reject(err);
         }

@@ -1,6 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { Socket } from 'socket.io-client';
 
 @Injectable()
 export class SocketGuard implements CanActivate {

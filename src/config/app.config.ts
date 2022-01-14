@@ -2,6 +2,7 @@ type NodeEnvType = 'development' | 'production' | 'test';
 
 export const NODE_ENV: NodeEnvType = (process.env.NODE_ENV as NodeEnvType) || 'development';
 export const PORT = +process.env.PORT || 3000;
+export const SECRETE_KEY = process.env.SECRETE_KEY || 'secret';
 
 // default is false
 export let isSchedulerMode = Boolean(process.env.IS_SCHEDULER_MODE);

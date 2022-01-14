@@ -1,4 +1,4 @@
-import { Logger, UseGuards } from '@nestjs/common';
+import { forwardRef, Inject, Logger, UseGuards } from '@nestjs/common';
 import {
   GatewayMetadata,
   MessageBody,
@@ -9,12 +9,11 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io-client';
 import { Server } from 'socket.io';
 import { QueueService } from 'src/app/queue/services/queue.service';
 import { Queues } from 'src/app/queue/queue.module';
 import { SchedulerService } from 'src/app/scheduler/services/scheduler.service';
-import { isControllerMode, isMonolithArchitecture } from 'src/config/app.config';
+import { isControllerMode, isMonolithArchitecture, SECRETE_KEY } from 'src/config/app.config';
 import { SocketGuard } from 'src/app/auth/guard/socket.guard';
 import { Event } from 'src/app/event/entities/event.entity';
 import * as jwt from 'jsonwebtoken';
@@ -32,18 +31,22 @@ export function SetupWebSocketServer<T extends Record<string, any> = GatewayMeta
   };
 }
 
+// @InjectableService()
 @SetupWebSocketServer(SocketListenPort)
 export class SocketServerService implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   logger = new Logger('SocketServerService');
 
-  constructor(private queueService: QueueService, private schedulerService: SchedulerService) {}
+  constructor(
+    private queueService: QueueService,
+    @Inject(forwardRef(() => SchedulerService)) private schedulerService: SchedulerService,
+  ) {}
 
   @WebSocketServer()
   server: Server;
 
   private async authenticate(client: any): Promise<boolean> {
     return await new Promise((resolve) => {
-      jwt.verify(client?.handshake?.auth?.token, 'your-256-bit-secret', (err: any, decoded: any) => {
+      jwt.verify(client?.handshake?.auth?.token, SECRETE_KEY, (err: any, decoded: any) => {
         if (err) {
           resolve(false);
         }
@@ -78,8 +81,10 @@ export class SocketServerService implements OnGatewayInit, OnGatewayConnection, 
     }
   }
 
-  private async ping(client: any): Promise<boolean> {
-    return new Promise((resolve) => {
+  async ping(clientId: string): Promise<boolean> {
+    const clients = await this.server.fetchSockets();
+    const client = clients.find((client) => client.id === clientId);
+    return await new Promise((resolve) => {
       try {
         client.emit('ping', 'ping', (data: string) => {
           if (data === 'pong') {
@@ -110,6 +115,16 @@ export class SocketServerService implements OnGatewayInit, OnGatewayConnection, 
 
   afterInit(): void {
     this.logger.log('Socket.io Server Initialized');
+
+    this.server.use((socket, next) => {
+      const isValid = this.validate(socket);
+
+      if (isValid) {
+        next();
+      } else {
+        socket.disconnect();
+      }
+    });
   }
 
   async handleConnection(client: any): Promise<void> {
@@ -118,7 +133,6 @@ export class SocketServerService implements OnGatewayInit, OnGatewayConnection, 
     const isValid = await this.validate(client);
 
     if (!isValid) {
-      this.logger.error(`client ${client.id} is not valid`);
       client.disconnect();
       return;
     }
@@ -131,11 +145,13 @@ export class SocketServerService implements OnGatewayInit, OnGatewayConnection, 
       await this.terminate(worker.identifier);
     }
 
-    this.schedulerService.workerConnected(uuid, client.id);
+    await this.schedulerService.workerConnected(uuid, client.id);
+
+    this.schedulerService.appendWorker({ socketId: client.id, worker });
   }
 
   async handleDisconnect(client: any): Promise<void> {
-    const { uuid } = client?.decoded;
+    const uuid = client?.decoded?.uuid;
 
     if (uuid) {
       this.schedulerService.workerDisconnected(uuid);

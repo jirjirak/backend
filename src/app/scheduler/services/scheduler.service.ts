@@ -1,5 +1,7 @@
-import { Logger } from '@nestjs/common';
+import { forwardRef, Inject, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { isEmpty } from 'class-validator';
+import { SocketServerService } from 'src/app/transmitter/services/socket-server.service';
 import { Worker } from 'src/app/worker/entities/worker.entity';
 import { WorkerStatus } from 'src/app/worker/enum/worker.enum';
 import { ManageWorkerService } from 'src/app/worker/services/manage-worker.service';
@@ -11,17 +13,48 @@ import { UtilsService } from '../../../common/service/utils.service';
 import { Monitor } from '../../monitor/entity/monitor.entity';
 import { MonitorStatus } from '../../monitor/enum/monitor.enum';
 import { MonitorService } from '../../monitor/services/monitor.service';
+import { ActiveWorkers } from '../interface/scheduler.interface';
 
 @InjectableService()
 export class SchedulerService {
-  logger = new Logger('SchedulerService');
+  private logger = new Logger('SchedulerService');
+  private activeWorkers: ActiveWorkers[] = [];
 
   constructor(
     private workerService: WorkerService,
     private manageWorkerService: ManageWorkerService,
     private utilsService: UtilsService,
     private monitorService: MonitorService,
+    @Inject(forwardRef(() => SocketServerService))
+    private socketServerService: SocketServerService,
   ) {}
+
+  async isWorkerAlive(data: ActiveWorkers): Promise<void> {
+    const { socketId, worker } = data;
+    const isAlive = await this.socketServerService.ping(socketId);
+    if (isAlive) {
+      // this.logger.verbose(`Worker ${worker.uuid} is alive`);
+    } else {
+      this.logger.verbose(`Worker ${worker.uuid} is not alive`);
+    }
+
+    await this.manageWorkerService.updateLastCheckIn(worker.id);
+  }
+
+  @Cron(CronExpression.EVERY_5_SECONDS)
+  async checkWorkerStatus(): Promise<void> {
+    this.activeWorkers.forEach((worker) => {
+      this.isWorkerAlive(worker);
+    });
+  }
+
+  appendWorker(data: ActiveWorkers): void {
+    this.activeWorkers.push(data);
+  }
+
+  removeWorker(socketId: string): void {
+    this.activeWorkers = this.activeWorkers.filter((worker) => worker.socketId !== socketId);
+  }
 
   private generateCronExpression(interval: number): string {
     // convert to second
@@ -72,7 +105,7 @@ export class SchedulerService {
       throw new Error('Worker not found');
     }
 
-    if (worker.status !== WorkerStatus.Active) {
+    if (worker.status !== WorkerStatus.Active || worker.identifier !== identifier) {
       await this.manageWorkerService.updateWorkerConnectionStatus(worker.id, { connected: true, identifier });
     }
   }

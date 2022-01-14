@@ -18,6 +18,15 @@ export class Worker extends BasicEntity {
   @Column({ nullable: true })
   identifier: string;
 
+  @Column({ nullable: true })
+  lastCheckIn: Date;
+
+  @Column({ nullable: true })
+  connectedAt: Date;
+
+  @Column({ nullable: true })
+  disconnectedAt: Date;
+
   @Column({ type: 'uuid', unique: true })
   uuid: string;
 

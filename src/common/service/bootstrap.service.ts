@@ -76,7 +76,6 @@ export class BootstrapService {
   async initBefore(): Promise<void> {
     await this.initializeService();
 
-
     // load monitors
     // await this.loadMonitors();
   }
