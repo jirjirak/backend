@@ -181,9 +181,10 @@ export function IsDateField(params?: { type?: any; isArray?: boolean; required?:
   };
 }
 
-export function IsEnumField(params?: { type?: any; isArray?: boolean; required?: boolean }) {
+export function IsEnumField(dataType?: any, params?: { type?: any; isArray?: boolean; required?: boolean }) {
   return function (target: any, propertyKey: string): void {
     params ||= {};
+    params.type = dataType;
     const { isArray, type } = getPropMetaData(params, target, propertyKey);
 
     ApiProperty({ enum: type, required: params.required, isArray })(target, propertyKey);
