@@ -134,7 +134,7 @@ export class AllowedToAccessGuard implements CanActivate {
     const ids = this.getIds(req);
 
     if (isEmpty(ids)) {
-      throw new BadRequestException('cannot find any team/monitor id');
+      return true;
     }
 
     const allowedToAccess = await this.allowedToAccess(req.user, ids);
