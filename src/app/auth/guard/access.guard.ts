@@ -6,6 +6,7 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
+import { isNumber } from 'class-validator';
 import { Request } from 'express';
 import { isArray, isEmpty } from 'lodash';
 import { Permission } from 'src/app/monitor/entity/permission.entity';
@@ -45,10 +46,14 @@ export class AllowedToAccessGuard implements CanActivate {
 
           if (isArray(value)) {
             value.forEach((id) => {
-              ids.push(id);
+              if (isNumber(id)) {
+                ids.push(id);
+              }
             });
           } else {
-            ids.push(value);
+            if (isNumber(value)) {
+              ids.push(value);
+            }
           }
         });
 
@@ -60,30 +65,17 @@ export class AllowedToAccessGuard implements CanActivate {
 
         if (isArray(value)) {
           value.forEach((id) => {
-            ids.push(id);
+            if (isNumber(id)) {
+              ids.push(id);
+            }
           });
         } else {
-          ids.push(value);
+          if (isNumber(value)) {
+            ids.push(value);
+          }
         }
       });
     }
-
-    // data.forEach((item) => {
-    //   team ||= item.team;
-    //   team ||= item.teams;
-
-    //   if (isArray(team)) {
-    //     team.forEach((id: number) => {
-    //       teamsId.push(id);
-    //     });
-    //   } else {
-    //     teamsId.push(team);
-    //   }
-    // });
-
-    // if (teamsId?.length === 0) {
-    //   throw new BadRequestException('cannot find team');
-    // }
 
     return ids;
   }
@@ -97,12 +89,12 @@ export class AllowedToAccessGuard implements CanActivate {
     ids = this.findIdsFromSource(data);
 
     if (isEmpty(ids)) {
-      data = !isEmpty(request?.body) ? request?.params : [];
+      data = !isEmpty(request?.body) ? request?.body : [];
       ids = this.findIdsFromSource(data);
     }
 
     if (isEmpty(ids)) {
-      data = !isEmpty(request?.query) ? request?.params : [];
+      data = !isEmpty(request?.query) ? request?.query : [];
       ids = this.findIdsFromSource(data);
     }
 
@@ -140,6 +132,12 @@ export class AllowedToAccessGuard implements CanActivate {
     }
 
     const ids = this.getIds(req);
+
+    if (isEmpty(ids)) {
+      throw new BadRequestException('cannot find any team/monitor id');
+    }
+    console.log(ids);
+
     const allowedToAccess = await this.allowedToAccess(req.user, ids);
 
     if (!allowedToAccess) {

@@ -33,7 +33,7 @@ export class MonitorController {
   }
 
   @StandardApi({ type: DeleteMonitorResDto })
-  // @UserRolePermission(Role.User)
+  //   @UserRolePermission()
   @Delete(':monitorId')
   async delete(@Param('monitorId') monitoId: number): AsyncStdRes<DeleteMonitorResDto> {
     await this.monitorService.deleteMonitor(monitoId);

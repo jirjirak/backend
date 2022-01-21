@@ -37,7 +37,7 @@ export class DirectoryService {
   }
 
   async list(teamId: number, userId: number): Promise<Directory[]> {
-    let directories = await this.directoryRepository
+    const directories = await this.directoryRepository
       .createQueryBuilder('directory')
       .where('directory.team = :team', { team: teamId })
       .leftJoinAndSelect('directory.monitors', 'monitor')
@@ -49,8 +49,6 @@ export class DirectoryService {
       })
       .loadRelationIdAndMap('directory.parent', 'directory.parent')
       .getMany();
-
-    directories = directories.filter((item) => item?.permissions?.[0]?.read !== false);
 
     const treeDirectory: Directory[] = ListToTree(directories);
 

@@ -1,3 +1,4 @@
+import { InternalServerErrorException } from '@nestjs/common';
 import { EntityRepository, SaveOptions } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
@@ -18,6 +19,10 @@ export class PermissionRepository extends BasicRepository<Permission> {
     data: QueryDeepPartialEntity<Permission>,
     options?: SaveOptions & { relations?: string[] },
   ): Promise<Permission> {
+    if (!data.monitor && !data.team) {
+      throw new InternalServerErrorException('cannot find any team/monitor id');
+    }
+
     return super.createAndSave(data, options);
   }
 }

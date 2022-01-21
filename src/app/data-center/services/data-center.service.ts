@@ -8,7 +8,7 @@ import { DataCenterRepository } from '../repositories/data-center.repository';
 export class DataCenterService {
   constructor(private dataCenterRepository: DataCenterRepository) {}
 
-  async register(creator: User, data: RegisterDataCenterBodyDto): Promise<DataCenter> {
+  async add(creator: User, data: RegisterDataCenterBodyDto): Promise<DataCenter> {
     const dataCenter = await this.dataCenterRepository.createAndSave(
       { ...data, creator },
       { relations: ['teams', 'tags'] },

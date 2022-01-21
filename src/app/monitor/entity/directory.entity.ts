@@ -5,7 +5,6 @@ import { BasicEntity } from '../../../common/basic/entity.basic';
 import { IsStringField } from '../../../common/decorators/common.decorator';
 import { Team } from '../../account/entities/team.entity';
 import { Monitor } from './monitor.entity';
-import { Permission } from './permission.entity';
 
 @Entity()
 export class Directory extends BasicEntity {
@@ -18,9 +17,6 @@ export class Directory extends BasicEntity {
 
   @OneToMany(() => Monitor, (monitor) => monitor.directory)
   monitors: Monitor[];
-
-  @OneToMany(() => Permission, (permission) => permission.directory)
-  permissions: Permission[];
 
   @ManyToOne(() => Team, { nullable: false })
   @JoinColumn()

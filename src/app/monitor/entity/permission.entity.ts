@@ -1,13 +1,13 @@
-import { TeamRole } from 'src/app/account/enum/team.enum';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
 import { Team } from '../../account/entities/team.entity';
 import { User } from '../../account/entities/user.entity';
-import { PermissionType } from '../enum/permission.enum';
-import { Directory } from './directory.entity';
 import { Monitor } from './monitor.entity';
 
+@Index('USER-TEAM', ['user', 'team'], { unique: true })
+@Index('USER-MONITOR', ['user', 'monitor'], { unique: true })
+@Index('SEARCH', ['user', 'monitor', 'team', 'create', 'update', 'delete', 'read'])
 @Entity()
 export class Permission extends BasicEntity {
   @ManyToOne(() => User, { nullable: false })
@@ -22,22 +22,15 @@ export class Permission extends BasicEntity {
   @JoinColumn()
   monitor: Monitor;
 
-  @Column({ type: 'enum', enum: TeamRole, nullable: true })
-  role: TeamRole;
-
-  @ManyToOne(() => Directory)
-  @JoinColumn()
-  directory: Directory;
-
-  @Column({ nullable: true })
+  @Column({ default: true })
   read: boolean;
 
-  @Column({ nullable: true })
+  @Column({ default: false })
   update: boolean;
 
-  @Column({ nullable: true })
+  @Column({ default: false })
   create: boolean;
 
-  @Column({ nullable: true })
+  @Column({ default: false })
   delete: boolean;
 }

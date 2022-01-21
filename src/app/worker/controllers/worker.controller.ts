@@ -40,7 +40,7 @@ export class ManageWorkerController {
     }
   }
 
-  @UserRolePermission(Role.User)
+    @UserRolePermission()
   @StandardApi({ type: RegisterWorkerResDto })
   @Post('register')
   async registerWorker(@GetUser() user: User, @Body() body: RegisterWorkerBodyDto): AsyncStdRes<RegisterWorkerResDto> {
