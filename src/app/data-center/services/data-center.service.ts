@@ -20,7 +20,7 @@ export class DataCenterService {
   }
 
   async findDataCenters(teams: Team[]): Promise<DataCenter[]> {
-    const teamsId = teams.map((team) => team.id);
+    const teamsId = teams?.map((team) => team.id);
 
     const dataCenters = await this.dataCenterRepository.find({
       join: {
@@ -30,8 +30,10 @@ export class DataCenterService {
         },
       },
       where: (qb) => {
-        qb.where('teams.id IN (:...teamsId)', { teamsId });
-        qb.andWhere('dataCenter.status = :status', { status: DataCenterStatus.Active });
+        if (teamsId) {
+          qb.where('teams.id IN (:...teamsId)', { teamsId });
+        }
+        // qb.andWhere('dataCenter.status = :status', { status: DataCenterStatus.Active });
         qb.orWhere('dataCenter.isPrivate = :isPrivate', { isPrivate: false });
       },
       order: { country: 'ASC', city: 'ASC' },

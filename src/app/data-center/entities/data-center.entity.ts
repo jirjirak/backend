@@ -15,10 +15,10 @@ export class DataCenter extends BasicEntity {
   @Column({ type: 'enum', enum: DataCenterStatus })
   status: DataCenterStatus;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   country: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   city: string;
 
   @Column({ nullable: true })
@@ -27,7 +27,7 @@ export class DataCenter extends BasicEntity {
   @Column({ default: true })
   isPrivate: boolean;
 
-  @ManyToMany(() => Team)
+  @ManyToMany(() => Team, { nullable: false })
   @JoinTable()
   teams: Team[];
 

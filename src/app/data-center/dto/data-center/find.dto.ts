@@ -3,7 +3,7 @@ import { IsPrimaryKeyField, IsStringField } from 'src/common/decorators/common.d
 import { DataCenter } from '../../entities/data-center.entity';
 
 export class FindDataCenterQueryDto {
-  @IsPrimaryKeyField({ type: Team })
+  @IsPrimaryKeyField({ type: Team, required: false })
   teams: Team[];
 }
 

@@ -1,7 +1,7 @@
 import { Body, Get, Post, Query } from '@nestjs/common';
 import { User } from 'src/app/account/entities/user.entity';
 import { BasicController } from 'src/common/basic/Basic.controller';
-import { AllowedToAccess } from 'src/common/decorators/allowed-to-access.decorator';
+import { CheckAccessTo } from 'src/common/decorators/allowed-to-access.decorator';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { UserRolePermission } from 'src/common/decorators/role-permission.decorator';
 import { StandardApi } from 'src/common/decorators/standard-api.decorator';
@@ -13,7 +13,7 @@ import { DataCenterService } from '../services/data-center.service';
 export class DataCenterController {
   constructor(private dataCenterService: DataCenterService) {}
 
-  @AllowedToAccess('update', 'team')
+  @CheckAccessTo('update', 'team')
   @UserRolePermission()
   @StandardApi({ type: RegisterDataCenterResDto })
   @Post('add')
@@ -22,7 +22,7 @@ export class DataCenterController {
     return dataCenter;
   }
 
-  @AllowedToAccess('read', 'team')
+  @CheckAccessTo('read', 'team')
   @UserRolePermission()
   @StandardApi({ type: FindDataCenterResDto })
   @Get()
