@@ -1,3 +1,4 @@
+import { TeamRole } from 'src/app/account/enum/team.enum';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BasicEntity } from '../../../common/basic/entity.basic';
@@ -13,31 +14,30 @@ export class Permission extends BasicEntity {
   @JoinColumn()
   user: User;
 
-  @ManyToOne(() => Team, { nullable: false })
+  @ManyToOne(() => Team)
   @JoinColumn()
   team: Team;
-
-  @Index()
-  @Column({ enum: PermissionType })
-  type: PermissionType;
-
-  @ManyToOne(() => Directory)
-  @JoinColumn()
-  directory: Directory;
 
   @ManyToOne(() => Monitor)
   @JoinColumn()
   monitor: Monitor;
 
-  @Column({ default: true })
+  @Column({ type: 'enum', enum: TeamRole, nullable: true })
+  role: TeamRole;
+
+  @ManyToOne(() => Directory)
+  @JoinColumn()
+  directory: Directory;
+
+  @Column({ nullable: true })
   read: boolean;
 
-  @Column({ default: false })
+  @Column({ nullable: true })
   update: boolean;
 
-  @Column({ default: false })
+  @Column({ nullable: true })
   create: boolean;
 
-  @Column({ default: false })
+  @Column({ nullable: true })
   delete: boolean;
 }

@@ -206,7 +206,6 @@ export function IsPrimaryKeyField(params?: { type?: any; isArray?: boolean; requ
     IsInt({ each: isArray })(target, propertyKey);
     Type(() => Number)(target, propertyKey);
     Expose()(target, propertyKey);
-    Min(1)(target, propertyKey);
     ApiProperty({ required: params?.required, type: Number, isArray })(target, propertyKey);
 
     if (params?.required === false) {

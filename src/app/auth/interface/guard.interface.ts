@@ -1,6 +1,7 @@
+import { TeamRole } from 'src/app/account/enum/team.enum';
+
 export interface UserIsOwnerOptionInterface {
-  sourcePkField?: string;
-  targetPkField?: string;
+  role?: TeamRole;
   area?: 'body' | 'params' | 'query';
-  identify?: 'team' | 'user';
+  identify?: 'team' | 'monitor';
 }

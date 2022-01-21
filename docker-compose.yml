@@ -10,6 +10,7 @@ services:
       - postgres:/data/postgres
     ports:
       - '5432:5432'
+
   redis:
     image: redis
     container_name: redis
@@ -29,5 +30,5 @@ services:
       - pgadmin:/var/lib/pgadmin
 
 volumes:
-  postgres:
-  pgadmin:
+  postgres: null
+  pgadmin: null

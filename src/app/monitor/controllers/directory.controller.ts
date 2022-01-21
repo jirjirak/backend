@@ -3,7 +3,6 @@ import { User } from 'src/app/account/entities/user.entity';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 
 import { BasicController } from '../../../common/basic/Basic.controller';
-import { IsOwner } from '../../../common/decorators/is-owner.decorator';
 import { UserRolePermission } from '../../../common/decorators/role-permission.decorator';
 import { StandardApi } from '../../../common/decorators/standard-api.decorator';
 import { Role } from '../../auth/enum/role.enum';
@@ -16,7 +15,6 @@ import { DirectoryService } from '../services/directory.service';
 export class DirectoryController {
   constructor(private directoryService: DirectoryService) {}
 
-  @IsOwner(Directory, { sourcePkField: 'parent' })
   @UserRolePermission(Role.User, Role.Admin)
   @StandardApi({ type: CreateDirectoryResDto })
   @Post()

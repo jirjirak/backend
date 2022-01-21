@@ -11,7 +11,7 @@ export class Team extends BasicEntity {
   @Column()
   name: string;
 
-  @OneToMany(() => Directory, (directory) => directory.team)
+  @OneToMany(() => Directory, (directory) => directory.team, { nullable: false })
   directories: Directory[];
 
   @ManyToMany(() => User)

@@ -94,8 +94,7 @@ export const setupSwagger = async (app: INestApplication): Promise<void> => {
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
-
-  const exclude = ['post:/v1/media/upload', 'post:/v1/auth/login-by-code', 'post:/v1/auth/login-by-password'];
+  const exclude = [];
 
   cleanupDocument(document, exclude);
   swaggerCustomConfig(document);
