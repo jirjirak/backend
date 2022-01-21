@@ -20,7 +20,7 @@ export class LoggerMiddleware implements NestMiddleware {
       msg = `${req.method} ${req.url} ${t2 - t1}ms`;
     }
 
-    if (res.statusCode < 300) {
+    if (res.statusCode < 200) {
       this.logger.log(msg);
     } else if (res.statusCode < 500) {
       this.logger.error(msg);

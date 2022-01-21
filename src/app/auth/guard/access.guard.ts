@@ -46,13 +46,13 @@ export class AllowedToAccessGuard implements CanActivate {
 
           if (isArray(value)) {
             value.forEach((id) => {
-              if (isNumber(id)) {
-                ids.push(id);
+              if (isNumber(+id)) {
+                ids.push(+id);
               }
             });
           } else {
-            if (isNumber(value)) {
-              ids.push(value);
+            if (isNumber(+value)) {
+              ids.push(+value);
             }
           }
         });
@@ -65,13 +65,13 @@ export class AllowedToAccessGuard implements CanActivate {
 
         if (isArray(value)) {
           value.forEach((id) => {
-            if (isNumber(id)) {
-              ids.push(id);
+            if (isNumber(+id)) {
+              ids.push(+id);
             }
           });
         } else {
-          if (isNumber(value)) {
-            ids.push(value);
+          if (isNumber(+value)) {
+            ids.push(+value);
           }
         }
       });
@@ -136,7 +136,6 @@ export class AllowedToAccessGuard implements CanActivate {
     if (isEmpty(ids)) {
       throw new BadRequestException('cannot find any team/monitor id');
     }
-    console.log(ids);
 
     const allowedToAccess = await this.allowedToAccess(req.user, ids);
 

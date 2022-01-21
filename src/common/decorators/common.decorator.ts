@@ -21,6 +21,7 @@ export const RelationalFieldMetaDataKey = 'RelationalFieldMetaDataKey';
 export interface relationalFieldMetaData {
   property: string;
   entity: string;
+  isArray?: boolean;
 }
 
 function getPropMetaData(
@@ -219,7 +220,7 @@ export function IsPrimaryKeyField(params?: { type?: any; isArray?: boolean; requ
 
     relationalFields ||= [];
 
-    relationalFields.push({ entity: type?.name, property: propertyKey });
+    relationalFields.push({ entity: type?.name, property: propertyKey, isArray });
 
     Reflect.defineMetadata(RelationalFieldMetaDataKey, relationalFields, target.constructor);
   };

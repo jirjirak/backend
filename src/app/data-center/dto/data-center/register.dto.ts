@@ -32,7 +32,7 @@ export class RegisterDataCenterBodyDto {
   @IsEnumField(DataCenterStatus)
   status: DataCenterStatus;
 
-  @IsPrimaryKeyField({ type: Team, required: false })
+  @IsPrimaryKeyField({ type: Team })
   teams: Team[];
 }
 

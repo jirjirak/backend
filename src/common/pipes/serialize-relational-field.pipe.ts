@@ -15,7 +15,11 @@ export class SerializeRelationalFieldPipe implements PipeTransform {
   }
 
   async transform(value: any, metadata: ArgumentMetadata): Promise<unknown> {
+    // if (metadata.type !== 'body') return value;
+
     const body = isArray(value) ? [...value] : [{ ...value }];
+
+    //TODO: recursive or nested
 
     const relationalFields: relationalFieldMetaData[] = Reflect.getMetadata(
       RelationalFieldMetaDataKey,
@@ -27,12 +31,22 @@ export class SerializeRelationalFieldPipe implements PipeTransform {
     const entityManager = getManager();
 
     for (const field of relationalFields) {
-      //
+      /**
+       *
+       */
       for (const data of body) {
-        //
+        /**
+         *
+         */
+
         if (isEmpty(data[field?.property]) && !data[field?.property]) continue;
 
         const numbers = data[field?.property];
+
+        if (field?.isArray && !isArray(data[field?.property])) {
+          data[field?.property] = [data[field?.property]];
+        }
+
         const isMany = isArray(numbers);
         const ids = isMany ? [...numbers] : [{ ...numbers }];
 
@@ -41,15 +55,17 @@ export class SerializeRelationalFieldPipe implements PipeTransform {
 
           const condition = isMany ? ids : [numbers];
 
-          const entityData = await repository.find({ where: { id: In(condition) } });
+          const entityData = await repository.find({ select: ['id'], where: { id: In(condition) }, withDeleted: true });
 
           if (entityData?.length !== ids?.length) {
             throw new BadRequestException('there is an id that dose not exist');
           }
 
-          data[field?.property] = isMany ? entityData : entityData[0];
+          data[field?.property] = field.isArray ? entityData : entityData[0];
         } else {
-          //
+          /**
+           *
+           */
           data[field?.property] = this.transferData(isMany ? ids : numbers);
         }
       }
